@@ -105,10 +105,10 @@ export default function PrintCalculator() {
         <div className="flex-1" />
         <span className="text-sm text-white">
           {dpi <= 150
-            ? "Standard \u2014 good at arm\u2019s length+"
+            ? "Standard \u2014 good across the room"
             : dpi <= 200
-              ? "High quality \u2014 close viewing"
-              : "Maximum \u2014 close-up / handheld"}
+              ? "High quality \u2014 good at arm's length"
+              : "Maximum \u2014 good handheld"}
         </span>
       </div>
 

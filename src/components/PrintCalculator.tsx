@@ -108,7 +108,7 @@ export default function PrintCalculator() {
             ? "Standard \u2014 good at arm\u2019s length+"
             : dpi <= 200
               ? "High quality \u2014 close viewing"
-              : "Maximum \u2014 gallery / handheld"}
+              : "Maximum \u2014 close-up / handheld"}
         </span>
       </div>
 

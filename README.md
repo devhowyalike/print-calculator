@@ -19,12 +19,6 @@ It also shows the perceptual minimum PPI for each size (based on typical viewing
 - Summary cards: printable count, largest excellent size, max PPI at that size
 - PPI vs DPI explainer section
 
-## Stack
-
-- [React](https://react.dev/)
-- [Vite](https://vitejs.dev/)
-- [Tailwind CSS v4](https://tailwindcss.com/)
-
 ## Getting Started
 
 ```bash
@@ -41,12 +35,18 @@ npm run build
 npm run preview
 ```
 
-> [!NOTE]
-> This project uses [pnpm](https://pnpm.io) for development and maintains a `pnpm-lock.yaml`. If you're contributing, use pnpm to keep the lockfile consistent: `npm i -g pnpm`.
+## Tech Stack
+
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS v4](https://tailwindcss.com/)
 
 ## Contributing
 
 Bug reports and pull requests are welcome. For major changes, open an issue first to discuss what you'd like to change.
+
+> [!NOTE]
+> This project uses [pnpm](https://pnpm.io) for development and maintains a `pnpm-lock.yaml`. If you're contributing, use pnpm to keep the lockfile consistent: `npm i -g pnpm`.
 
 ## License
 

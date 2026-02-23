@@ -21,11 +21,9 @@ It also shows the perceptual minimum PPI for each size (based on typical viewing
 
 ## Stack
 
-- [TanStack Start](https://tanstack.com/start) — React full-stack framework
-- [TanStack Router](https://tanstack.com/router) — file-based routing
-- [Tailwind CSS v4](https://tailwindcss.com/) — styling
-- [shadcn/ui](https://ui.shadcn.com/) — component library
+- [React](https://react.dev/) — UI
 - [Vite](https://vitejs.dev/) — build tool
+- [Tailwind CSS v4](https://tailwindcss.com/) — styling
 
 ## Getting Started
 

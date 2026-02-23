@@ -13,7 +13,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'Print Calculator',
+        title: 'Pixel to Print Calculator',
       },
     ],
     links: [

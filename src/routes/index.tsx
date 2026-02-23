@@ -7,21 +7,21 @@ const DEFAULT_WIDTH = 5592;
 const DEFAULT_HEIGHT = 4096;
 
 const COMMON_SIZES = [
-  { name: '4×6"', w: 4, h: 6 },
-  { name: '5×7"', w: 5, h: 7 },
-  { name: '8×10"', w: 8, h: 10 },
-  { name: '8.5×11"', w: 8.5, h: 11 },
-  { name: '11×14"', w: 11, h: 14 },
-  { name: '12×16"', w: 12, h: 16 },
-  { name: '12×18"', w: 12, h: 18 },
-  { name: '16×20"', w: 16, h: 20 },
-  { name: '16×24"', w: 16, h: 24 },
-  { name: '18×24"', w: 18, h: 24 },
-  { name: '20×24"', w: 20, h: 24 },
-  { name: '20×30"', w: 20, h: 30 },
-  { name: '24×36"', w: 24, h: 36 },
-  { name: '30×40"', w: 30, h: 40 },
-  { name: '36×48"', w: 36, h: 48 },
+  { name: '4x6"', w: 4, h: 6 },
+  { name: '5x7"', w: 5, h: 7 },
+  { name: '8x10"', w: 8, h: 10 },
+  { name: '8.5x11"', w: 8.5, h: 11 },
+  { name: '11x14"', w: 11, h: 14 },
+  { name: '12x16"', w: 12, h: 16 },
+  { name: '12x18"', w: 12, h: 18 },
+  { name: '16x20"', w: 16, h: 20 },
+  { name: '16x24"', w: 16, h: 24 },
+  { name: '18x24"', w: 18, h: 24 },
+  { name: '20x24"', w: 20, h: 24 },
+  { name: '20x30"', w: 20, h: 30 },
+  { name: '24x36"', w: 24, h: 36 },
+  { name: '30x40"', w: 30, h: 40 },
+  { name: '36x48"', w: 36, h: 48 },
 ];
 
 type Status = "perfect" | "acceptable" | "stretch" | "poor";
@@ -65,7 +65,7 @@ function getEffectiveDPI(
 /**
  * Minimum PPI needed based on typical viewing distance for a print size.
  * Uses 1-arcminute visual acuity: threshold ≈ 3438 / distance_inches.
- * Viewing distance heuristic: 1.5× the print diagonal.
+ * Viewing distance heuristic: 1.5x the print diagonal.
  */
 function getViewingPPI(size: { w: number; h: number }) {
   const diagonal = Math.sqrt(size.w ** 2 + size.h ** 2);
@@ -127,26 +127,19 @@ function PrintSizeChart() {
         <div className="mb-5">
           <div className="mb-1.5 flex items-center gap-2.5">
             <span className="text-sm">🖨️</span>
-            <span className="font-mono text-xs uppercase tracking-[1.5px] text-zinc-500">
-              Print Calculator
-            </span>
+            <h1 className="font-mono text-3xl uppercase tracking-[1.5px] text-zinc-500">
+              Pixel to Print Calculator
+            </h1>
           </div>
-          <h1 className="mb-1.5 mt-0 bg-linear-to-br from-zinc-200 to-zinc-400 bg-clip-text text-[28px] font-bold text-transparent">
-            What Can You Print?
-          </h1>
-          <p className="mt-2 m-0 text-xl leading-relaxed text-zinc-400">
-            This calculator uses pixel dimensions only (PPI) — the DPI metadata
-            embedded in your image file doesn't affect the results.{" "}
-            <a
-              href="#ppi-vs-dpi"
-              className="text-zinc-300 underline decoration-zinc-600 underline-offset-2 transition-colors hover:text-zinc-100"
-            >
-              Learn more ↓
-            </a>
-          </p>
-          <h2 className="mt-6 text-xl font-semibold leading-relaxed text-white">
-            Source file dimensions
+
+          <h2 className="mt-1 mb-4 text-xl font-normal text-white">
+            A tool for photographers, designers and artists to determine which
+            print sizes their digital images can support at a given quality
+            level.
           </h2>
+          <h3 className="mt-6 text-xl font-semibold leading-relaxed text-white">
+            Source file dimensions
+          </h3>
         </div>
 
         {/* Dimension Inputs */}
@@ -163,7 +156,7 @@ function PrintSizeChart() {
               }
               className="w-[90px] rounded-lg border border-zinc-700 bg-[#1c1c21] px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none focus:border-zinc-500"
             />
-            <span className="text-base font-light text-zinc-700">×</span>
+            <span className="text-base font-light text-zinc-700">x</span>
             <input
               type="number"
               value={pixelH}
@@ -209,6 +202,17 @@ function PrintSizeChart() {
                 : "Maximum \u2014 gallery / handheld"}
           </span>
         </div>
+
+        <p className="mb-7 mt-[-16px] text-sm leading-relaxed text-zinc-500">
+          This calculator uses pixel dimensions only (PPI) — the DPI metadata
+          embedded in your image file doesn't affect the results.{" "}
+          <a
+            href="#ppi-vs-dpi"
+            className="text-zinc-400 underline decoration-zinc-700 underline-offset-2 transition-colors hover:text-zinc-200"
+          >
+            Learn more ↓
+          </a>
+        </p>
 
         {/* Summary Cards */}
         <div className="mb-6 flex flex-wrap gap-3">
@@ -352,7 +356,7 @@ function PrintSizeChart() {
           <li>Both landscape and portrait orientations are considered.</li>
           <li>
             <span className="text-zinc-200">"Your PPI"</span> shows the
-            effective resolution your {pixelW}×{pixelH} file achieves at each
+            effective resolution your {pixelW}x{pixelH} file achieves at each
             print size.
           </li>
           <li>
@@ -364,7 +368,7 @@ function PrintSizeChart() {
           <li>
             <span className="text-blue-400">Min PPI</span> is the lowest
             resolution the human eye can distinguish at a typical viewing
-            distance for that size (1.5× the diagonal).
+            distance for that size (1.5x the diagonal).
           </li>
           <li>
             If your PPI exceeds the min, the print will look sharp in practice —
@@ -453,18 +457,20 @@ function PrintSizeChart() {
                 rel="noopener noreferrer"
                 className="text-sm text-zinc-400 underline decoration-zinc-700 underline-offset-2 transition-colors hover:text-zinc-200"
               >
-                "How many pixels per inch do you need to make large prints?" by Simon d'Entremont
+                "How many pixels per inch do you need to make large prints?" by
+                Simon d'Entremont
               </a>
             </li>
           </ul>
         </div>
         {/* Disclaimer */}
         <p className="mt-8 text-center text-lg leading-relaxed text-white">
-          <span className="mr-2">⚠️</span>Quality ratings are based on perceptual heuristics (viewing distance,
-          visual acuity estimates) and are intended as a practical guide, not a
-          definitive standard. Calculations may be inaccurate. Results may vary
-          depending on the printer, paper, viewing conditions, and individual
-          perception. Use at your own risk.
+          <span className="mr-2">⚠️</span>Quality ratings are based on
+          perceptual heuristics (viewing distance, visual acuity estimates) and
+          are intended as a practical guide, not a definitive standard.
+          Calculations may be inaccurate. Results may vary depending on the
+          printer, paper, viewing conditions, and individual perception. Use at
+          your own risk.
         </p>
         {/* Footer */}
         <div className="mt-6 mb-2 flex items-center justify-center gap-4">

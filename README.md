@@ -1,6 +1,6 @@
-# Print Calculator
+# Pixel to Print Calculator
 
-A tool for photographers, designers and artists to determine which print sizes their images can support at a given quality level.
+A tool for photographers, designers and artists to determine which print sizes their digital images can support at a given quality level.
 
 ![Print Calculator screenshot](public/print-screenshot.png)
 

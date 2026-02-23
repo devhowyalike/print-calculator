@@ -21,9 +21,9 @@ It also shows the perceptual minimum PPI for each size (based on typical viewing
 
 ## Stack
 
-- [React](https://react.dev/) — UI
-- [Vite](https://vitejs.dev/) — build tool
-- [Tailwind CSS v4](https://tailwindcss.com/) — styling
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS v4](https://tailwindcss.com/)
 
 ## Getting Started
 

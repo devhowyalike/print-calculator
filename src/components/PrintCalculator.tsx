@@ -18,7 +18,7 @@ type Mode = "print" | "billboard";
 export default function PrintCalculator() {
   const [mode, setMode] = useState<Mode>("print");
   const [dpi, setDpi] = useState(150);
-  const [viewingDistanceFt, setViewingDistanceFt] = useState(500);
+  const [viewingDistanceFt, setViewingDistanceFt] = useState(5);
   const [pixelWStr, setPixelWStr] = useState(String(DEFAULT_WIDTH));
   const [pixelHStr, setPixelHStr] = useState(String(DEFAULT_HEIGHT));
 

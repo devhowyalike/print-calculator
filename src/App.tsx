@@ -3,7 +3,7 @@ import PPIExplainer from "./components/PPIExplainer";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#0a0a0b] text-zinc-200 px-6 py-10">
+    <div className="min-h-screen bg-[#0a0a0b] text-zinc-200 px-4 sm:px-6 py-10">
       <div className="mx-auto max-w-[780px]">
         <PrintCalculator />
 

@@ -12,12 +12,15 @@ import {
 
 export default function PrintCalculator() {
   const [dpi, setDpi] = useState(150);
-  const [pixelW, setPixelW] = useState(DEFAULT_WIDTH);
-  const [pixelH, setPixelH] = useState(DEFAULT_HEIGHT);
+  const [pixelWStr, setPixelWStr] = useState(String(DEFAULT_WIDTH));
+  const [pixelHStr, setPixelHStr] = useState(String(DEFAULT_HEIGHT));
+
+  const pixelW = parseInt(pixelWStr) || 0;
+  const pixelH = parseInt(pixelHStr) || 0;
 
   const data = useMemo(() => {
-    const w = pixelW || 0;
-    const h = pixelH || 0;
+    const w = pixelW;
+    const h = pixelH;
     return COMMON_SIZES.map((size) => {
       const effectiveDPI = Math.round(getEffectiveDPI(size, w, h));
       const viewingPPI = getViewingPPI(size);
@@ -52,38 +55,42 @@ export default function PrintCalculator() {
       </div>
 
       {/* Dimension Inputs */}
-      <div className="mb-3 flex items-center gap-4 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
+      <div className="mb-3 flex items-center gap-3 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
         <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
           Pixels
         </span>
         <div className="flex items-center gap-2">
           <input
             type="number"
-            value={pixelW}
-            onChange={(e) =>
-              setPixelW(Math.max(0, parseInt(e.target.value) || 0))
-            }
-            className="w-[90px] rounded-lg border border-zinc-700 bg-[#1c1c21] px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none focus:border-zinc-500"
+            value={pixelWStr}
+            onChange={(e) => setPixelWStr(e.target.value)}
+            onBlur={(e) => {
+              const n = parseInt(e.target.value);
+              setPixelWStr(String(isNaN(n) || n < 0 ? 0 : n));
+            }}
+            className="w-[80px] sm:w-[90px] rounded-lg border border-zinc-700 bg-[#1c1c21] px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none focus:border-zinc-500"
           />
           <span className="text-base font-light text-zinc-700">x</span>
           <input
             type="number"
-            value={pixelH}
-            onChange={(e) =>
-              setPixelH(Math.max(0, parseInt(e.target.value) || 0))
-            }
-            className="w-[90px] rounded-lg border border-zinc-700 bg-[#1c1c21] px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none focus:border-zinc-500"
+            value={pixelHStr}
+            onChange={(e) => setPixelHStr(e.target.value)}
+            onBlur={(e) => {
+              const n = parseInt(e.target.value);
+              setPixelHStr(String(isNaN(n) || n < 0 ? 0 : n));
+            }}
+            className="w-[80px] sm:w-[90px] rounded-lg border border-zinc-700 bg-[#1c1c21] px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none focus:border-zinc-500"
           />
           <span className="text-xs text-zinc-700">px</span>
         </div>
         <div className="flex-1" />
-        <span className="font-mono text-sm text-white">
+        <span className="font-mono text-xs sm:text-sm text-white whitespace-nowrap">
           {((pixelW * pixelH) / 1000000).toFixed(1)} MP
         </span>
       </div>
 
       {/* PPI Selector */}
-      <div className="mb-7 flex items-center gap-4 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
+      <div className="mb-7 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
         <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
           Target PPI
         </span>
@@ -102,7 +109,7 @@ export default function PrintCalculator() {
             </button>
           ))}
         </div>
-        <div className="flex-1" />
+        <span className="hidden sm:block flex-1" />
         <span className="text-sm text-white">
           {dpi <= 150
             ? "Standard \u2014 good across the room"
@@ -157,12 +164,13 @@ export default function PrintCalculator() {
 
       {/* Table */}
       <div className="overflow-hidden rounded-[14px] border border-[#1c1c21] bg-[#131316]">
-        <div className="grid grid-cols-[90px_1fr_80px_80px_80px] border-b border-[#1c1c21] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1px] text-zinc-600">
+        <div className="grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] border-b border-[#1c1c21] px-4 sm:px-5 py-3 text-[11px] font-semibold uppercase tracking-[1px] text-zinc-600">
           <div>Size</div>
           <div>Coverage</div>
           <div className="text-right">Your PPI</div>
-          <div className="text-right">Min PPI</div>
-          <div className="text-right">Quality</div>
+          <div className="text-right sm:hidden">Quality</div>
+          <div className="hidden sm:block text-right">Min PPI</div>
+          <div className="hidden sm:block text-right">Quality</div>
         </div>
 
         {data.map((item, i) => {
@@ -174,7 +182,7 @@ export default function PrintCalculator() {
           return (
             <div
               key={item.name}
-              className="grid grid-cols-[90px_1fr_80px_80px_80px] items-center px-5 py-[11px] transition-colors duration-300"
+              className="grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] items-center px-4 sm:px-5 py-[11px] transition-colors duration-300"
               style={{
                 background: sc.bg,
                 borderBottom:
@@ -184,7 +192,7 @@ export default function PrintCalculator() {
               <div className="font-mono text-sm font-semibold text-zinc-200">
                 {item.name}
               </div>
-              <div className="pr-5">
+              <div className="pr-3 sm:pr-5">
                 <div className="h-1.5 overflow-hidden rounded-full bg-[#1c1c21]">
                   <div
                     className="h-full rounded-full opacity-70 transition-[width] duration-400 ease-out"
@@ -201,8 +209,21 @@ export default function PrintCalculator() {
               >
                 {item.effectiveDPI}
               </div>
+              {/* Mobile: show quality icon only */}
               <div
-                className="text-right font-mono text-[13px] font-medium"
+                className="flex sm:hidden items-center justify-end"
+                style={{ color: sc.color }}
+              >
+                <span
+                  className="inline-flex h-[18px] w-[18px] items-center justify-center rounded-full text-[10px] font-bold"
+                  style={{ background: `${sc.color}18` }}
+                >
+                  {sc.icon}
+                </span>
+              </div>
+              {/* Desktop: Min PPI */}
+              <div
+                className="hidden sm:block text-right font-mono text-[13px] font-medium"
                 style={{
                   color:
                     item.effectiveDPI >= item.viewingPPI
@@ -212,8 +233,9 @@ export default function PrintCalculator() {
               >
                 {item.viewingPPI}
               </div>
+              {/* Desktop: Quality label */}
               <div
-                className="flex items-center justify-end gap-[5px] text-right text-xs font-medium"
+                className="hidden sm:flex items-center justify-end gap-[5px] text-right text-xs font-medium"
                 style={{ color: sc.color }}
               >
                 <span

@@ -18,7 +18,7 @@ type Mode = "print" | "billboard";
 export default function PrintCalculator() {
   const [mode, setMode] = useState<Mode>("print");
   const [dpi, setDpi] = useState(150);
-  const [viewingDistanceFt, setViewingDistanceFt] = useState(300);
+  const [viewingDistanceFt, setViewingDistanceFt] = useState(500);
   const [pixelWStr, setPixelWStr] = useState(String(DEFAULT_WIDTH));
   const [pixelHStr, setPixelHStr] = useState(String(DEFAULT_HEIGHT));
 
@@ -27,26 +27,28 @@ export default function PrintCalculator() {
 
   const sizes = mode === "print" ? COMMON_SIZES : BILLBOARD_SIZES;
 
+  const currentPreset = VIEWING_PRESETS.find((p) => p.distanceFt === viewingDistanceFt);
+  const currentPresetPPI = currentPreset?.ppi ?? Math.ceil(getViewingPPIFromDistance(viewingDistanceFt));
+
   const data = useMemo(() => {
     const w = pixelW;
     const h = pixelH;
-    const billboardRequiredPPI = getViewingPPIFromDistance(viewingDistanceFt);
     return sizes.map((size) => {
       const effectiveDPI = Math.round(getEffectiveDPI(size, w, h));
       const viewingPPI =
         mode === "print"
           ? getViewingPPI(size)
-          : Math.round(billboardRequiredPPI);
-      const targetDpi = mode === "print" ? dpi : Math.ceil(billboardRequiredPPI);
+          : currentPresetPPI;
+      const targetDpi = mode === "print" ? dpi : currentPresetPPI;
       const status = getStatus(size, targetDpi, w, h);
       const fineForDistance = effectiveDPI < targetDpi && effectiveDPI >= viewingPPI;
       return { ...size, status, effectiveDPI, viewingPPI, fineForDistance, targetDpi };
     });
-  }, [mode, dpi, viewingDistanceFt, pixelW, pixelH, sizes]);
+  }, [mode, dpi, currentPresetPPI, pixelW, pixelH, sizes]);
 
   const excellent = data.filter((d) => d.status === "perfect").length;
   const lastExcellent = [...data].reverse().find((d) => d.status === "perfect");
-  const activeDpi = mode === "print" ? dpi : Math.ceil(getViewingPPIFromDistance(viewingDistanceFt));
+  const activeDpi = mode === "print" ? dpi : currentPresetPPI;
 
   return (
     <>
@@ -175,10 +177,10 @@ export default function PrintCalculator() {
             </div>
             <span className="hidden sm:block flex-1" />
             <span className="text-sm text-white">
-              {VIEWING_PRESETS.find((p) => p.distanceFt === viewingDistanceFt)?.description ?? ""} ({viewingDistanceFt} ft)
+              {currentPreset?.description ?? ""} (~{viewingDistanceFt} ft)
               {" \u2014 "}
               <span className="font-mono text-zinc-400">
-                {Math.ceil(getViewingPPIFromDistance(viewingDistanceFt))} PPI min
+                {currentPresetPPI} PPI target
               </span>
             </span>
           </>
@@ -199,9 +201,9 @@ export default function PrintCalculator() {
           </>
         ) : (
           <>
-            Billboard sizes are rated against the minimum PPI the human eye can
-            resolve at the selected viewing distance, using 1-arcminute visual
-            acuity. Quality ratings reflect file resolution, not viewing conditions.
+            Billboard sizes are rated against industry-standard PPI targets
+            for the selected viewing context. Quality ratings reflect whether
+            your file has enough pixels for sharp output at that distance.
           </>
         )}
       </p>
@@ -237,7 +239,7 @@ export default function PrintCalculator() {
               ? lastExcellent
                 ? lastExcellent.effectiveDPI
                 : "—"
-              : Math.ceil(getViewingPPIFromDistance(viewingDistanceFt))}
+              : currentPresetPPI}
           </div>
         </div>
       </div>
@@ -393,12 +395,13 @@ export default function PrintCalculator() {
             <li>
               Quality ratings compare your PPI against the{" "}
               <span className="text-zinc-200">
-                {Math.ceil(getViewingPPIFromDistance(viewingDistanceFt))} PPI
+                {currentPresetPPI} PPI
               </span>{" "}
-              minimum the human eye can resolve at{" "}
-              <span className="text-zinc-200">{viewingDistanceFt} ft</span>{" "}
-              (1-arcminute visual acuity). Below this, the image will appear
-              soft regardless of print quality.
+              industry standard for{" "}
+              <span className="text-zinc-200">
+                {currentPreset?.label.toLowerCase() ?? "this"} viewing (~{viewingDistanceFt} ft)
+              </span>
+              . Below this, the image will look soft at that distance.
             </li>
           </>
         )}

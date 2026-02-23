@@ -2,17 +2,17 @@ export const DEFAULT_WIDTH = 5592;
 export const DEFAULT_HEIGHT = 4096;
 
 export const BILLBOARD_SIZES = [
-  { name: '6×12 ft', w: 72, h: 144 },
-  { name: '8×24 ft', w: 96, h: 288 },
-  { name: '12×25 ft', w: 144, h: 300 },
-  { name: '14×48 ft', w: 168, h: 576 },
-  { name: '20×40 ft', w: 240, h: 480 },
+  { name: '6x12 ft', w: 72, h: 144 },
+  { name: '8x24 ft', w: 96, h: 288 },
+  { name: '12x25 ft', w: 144, h: 300 },
+  { name: '14x48 ft', w: 168, h: 576 },
+  { name: '20x40 ft', w: 240, h: 480 },
 ];
 
 export const VIEWING_PRESETS = [
-  { label: 'Indoor', distanceFt: 15, ppi: 50, description: 'Trade show / lobby' },
-  { label: 'Street', distanceFt: 75, ppi: 30, description: 'Pedestrian / storefront' },
-  { label: 'Highway', distanceFt: 300, ppi: 20, description: 'Roadside bulletin' },
+  { label: 'Indoor', distanceFt: 5, ppi: 100, description: 'Trade Show' },
+  { label: 'Street', distanceFt: 30, ppi: 35, description: 'Storefront' },
+  { label: 'Highway', distanceFt: 500, ppi: 20, description: 'Billboard' },
 ] as const;
 
 export type ViewingLabel = typeof VIEWING_PRESETS[number]['label'];

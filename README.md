@@ -27,11 +27,9 @@ It also shows the perceptual minimum PPI for each size (based on typical viewing
 
 ## Getting Started
 
-> Requires [pnpm](https://pnpm.io). Install it with `npm i -g pnpm` if needed.
-
 ```bash
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
 The app runs at `http://localhost:3000`.
@@ -39,9 +37,12 @@ The app runs at `http://localhost:3000`.
 ## Build
 
 ```bash
-pnpm build
-pnpm preview
+npm run build
+npm run preview
 ```
+
+> [!NOTE]
+> This project uses [pnpm](https://pnpm.io) for development and maintains a `pnpm-lock.yaml`. If you're contributing, use pnpm to keep the lockfile consistent: `npm i -g pnpm`.
 
 ## Contributing
 

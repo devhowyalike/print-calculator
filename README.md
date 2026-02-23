@@ -1,6 +1,6 @@
 # Print Calculator
 
-A tool for photographers and designers to determine which print sizes their images can support at a given quality level.
+A tool for photographers, designers and artists to determine which print sizes their images can support at a given quality level.
 
 ![Print Calculator screenshot](public/print-screenshot.png)
 
@@ -52,16 +52,6 @@ pnpm test
 ```
 
 Tests use [Vitest](https://vitest.dev/) and [Testing Library](https://testing-library.com/).
-
-## Adding shadcn Components
-
-```bash
-pnpm dlx shadcn@latest add button
-```
-
-## Adding Routes
-
-Drop a new file into `src/routes/` — TanStack Router picks it up automatically via file-based routing. The root layout lives in `src/routes/__root.tsx`.
 
 ## Contributing
 

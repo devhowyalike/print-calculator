@@ -1,7 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-
-export const Route = createFileRoute("/")({ component: PrintSizeChart });
 
 const DEFAULT_WIDTH = 5592;
 const DEFAULT_HEIGHT = 4096;
@@ -100,7 +97,7 @@ const STATUS_CONFIG = {
   },
 } as const;
 
-function PrintSizeChart() {
+export default function App() {
   const [dpi, setDpi] = useState(150);
   const [pixelW, setPixelW] = useState(DEFAULT_WIDTH);
   const [pixelH, setPixelH] = useState(DEFAULT_HEIGHT);

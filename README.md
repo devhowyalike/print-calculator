@@ -8,6 +8,9 @@ Enter your image's pixel dimensions and choose a target PPI — the calculator e
 
 It also shows the perceptual minimum PPI for each size (based on typical viewing distance), so you can see when a print will look sharp in practice even if it falls below your technical target.
 
+> [!NOTE]
+> Quality ratings are based on perceptual heuristics (viewing distance, visual acuity estimates) and are intended as a practical guide, not a definitive standard. Calculations may be inaccurate. Results may vary depending on the printer, paper, viewing conditions, and individual perception. Use at your own risk.
+
 ## Features
 
 - Instant quality ratings across 15 standard print sizes

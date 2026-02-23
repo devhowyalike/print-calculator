@@ -1,6 +1,22 @@
 export const DEFAULT_WIDTH = 5592;
 export const DEFAULT_HEIGHT = 4096;
 
+export const BILLBOARD_SIZES = [
+  { name: '6×12 ft', w: 72, h: 144 },
+  { name: '8×24 ft', w: 96, h: 288 },
+  { name: '12×25 ft', w: 144, h: 300 },
+  { name: '14×48 ft', w: 168, h: 576 },
+  { name: '20×40 ft', w: 240, h: 480 },
+];
+
+export const VIEWING_PRESETS = [
+  { label: 'Indoor', distanceFt: 15, ppi: 50, description: 'Trade show / lobby' },
+  { label: 'Street', distanceFt: 75, ppi: 30, description: 'Pedestrian / storefront' },
+  { label: 'Highway', distanceFt: 300, ppi: 20, description: 'Roadside bulletin' },
+] as const;
+
+export type ViewingLabel = typeof VIEWING_PRESETS[number]['label'];
+
 export const COMMON_SIZES = [
   { name: '4x6"', w: 4, h: 6 },
   { name: '5x7"', w: 5, h: 7 },
@@ -93,4 +109,13 @@ export function getViewingPPI(size: { w: number; h: number }) {
   const diagonal = Math.sqrt(size.w ** 2 + size.h ** 2);
   const viewingDistance = diagonal * 1.5;
   return Math.round(3438 / viewingDistance);
+}
+
+/**
+ * Minimum PPI needed for a given viewing distance in feet.
+ * Uses the same 1-arcminute visual acuity formula.
+ */
+export function getViewingPPIFromDistance(distanceFt: number): number {
+  const distanceInches = distanceFt * 12;
+  return 3438 / distanceInches;
 }

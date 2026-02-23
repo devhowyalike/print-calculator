@@ -4,34 +4,49 @@ import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
   COMMON_SIZES,
+  BILLBOARD_SIZES,
+  VIEWING_PRESETS,
   STATUS_CONFIG,
   getStatus,
   getEffectiveDPI,
   getViewingPPI,
+  getViewingPPIFromDistance,
 } from "../lib/calculator";
 
+type Mode = "print" | "billboard";
+
 export default function PrintCalculator() {
+  const [mode, setMode] = useState<Mode>("print");
   const [dpi, setDpi] = useState(150);
+  const [viewingDistanceFt, setViewingDistanceFt] = useState(300);
   const [pixelWStr, setPixelWStr] = useState(String(DEFAULT_WIDTH));
   const [pixelHStr, setPixelHStr] = useState(String(DEFAULT_HEIGHT));
 
   const pixelW = parseInt(pixelWStr) || 0;
   const pixelH = parseInt(pixelHStr) || 0;
 
+  const sizes = mode === "print" ? COMMON_SIZES : BILLBOARD_SIZES;
+
   const data = useMemo(() => {
     const w = pixelW;
     const h = pixelH;
-    return COMMON_SIZES.map((size) => {
+    const billboardRequiredPPI = getViewingPPIFromDistance(viewingDistanceFt);
+    return sizes.map((size) => {
       const effectiveDPI = Math.round(getEffectiveDPI(size, w, h));
-      const viewingPPI = getViewingPPI(size);
-      const status = getStatus(size, dpi, w, h);
-      const fineForDistance = effectiveDPI < dpi && effectiveDPI >= viewingPPI;
-      return { ...size, status, effectiveDPI, viewingPPI, fineForDistance };
+      const viewingPPI =
+        mode === "print"
+          ? getViewingPPI(size)
+          : Math.round(billboardRequiredPPI);
+      const targetDpi = mode === "print" ? dpi : Math.ceil(billboardRequiredPPI);
+      const status = getStatus(size, targetDpi, w, h);
+      const fineForDistance = effectiveDPI < targetDpi && effectiveDPI >= viewingPPI;
+      return { ...size, status, effectiveDPI, viewingPPI, fineForDistance, targetDpi };
     });
-  }, [dpi, pixelW, pixelH]);
+  }, [mode, dpi, viewingDistanceFt, pixelW, pixelH, sizes]);
 
   const excellent = data.filter((d) => d.status === "perfect").length;
   const lastExcellent = [...data].reverse().find((d) => d.status === "perfect");
+  const activeDpi = mode === "print" ? dpi : Math.ceil(getViewingPPIFromDistance(viewingDistanceFt));
 
   return (
     <>
@@ -49,6 +64,24 @@ export default function PrintCalculator() {
           print sizes their digital images can support at a given quality
           level.
         </h2>
+
+        {/* Mode toggle */}
+        <div className="mt-5 mb-1 flex items-center gap-1 rounded-xl border border-zinc-800 bg-[#131316] p-1 w-fit">
+          {(["print", "billboard"] as const).map((m) => (
+            <button
+              key={m}
+              onClick={() => setMode(m)}
+              className={`cursor-pointer rounded-lg px-4 py-[7px] text-sm font-medium transition-all duration-200 ${
+                mode === m
+                  ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
+                  : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
+              }`}
+            >
+              {m === "print" ? "Standard Print" : "Billboard / Large Format"}
+            </button>
+          ))}
+        </div>
+
         <h3 className="mt-6 text-xl font-semibold leading-relaxed text-white">
           Source file dimensions
         </h3>
@@ -89,52 +122,95 @@ export default function PrintCalculator() {
         </span>
       </div>
 
-      {/* PPI Selector */}
+      {/* PPI Selector / Viewing Distance */}
       <div className="mb-7 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
-        <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
-          Target PPI
-        </span>
-        <div className="flex gap-1.5">
-          {([150, 200, 300] as const).map((val) => (
-            <button
-              key={val}
-              onClick={() => setDpi(val)}
-              className={`cursor-pointer rounded-lg px-[18px] py-[7px] font-mono text-sm font-medium transition-all duration-200 ${
-                dpi === val
-                  ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
-                  : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
-              }`}
-            >
-              {val}
-            </button>
-          ))}
-        </div>
-        <span className="hidden sm:block flex-1" />
-        <span className="text-sm text-white">
-          {dpi <= 150
-            ? "Standard \u2014 good across the room"
-            : dpi <= 200
-              ? "High quality \u2014 good at arm's length"
-              : "Maximum \u2014 good handheld"}
-        </span>
+        {mode === "print" ? (
+          <>
+            <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
+              Target PPI
+            </span>
+            <div className="flex gap-1.5">
+              {([150, 200, 300] as const).map((val) => (
+                <button
+                  key={val}
+                  onClick={() => setDpi(val)}
+                  className={`cursor-pointer rounded-lg px-[18px] py-[7px] font-mono text-sm font-medium transition-all duration-200 ${
+                    dpi === val
+                      ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
+                      : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
+                  }`}
+                >
+                  {val}
+                </button>
+              ))}
+            </div>
+            <span className="hidden sm:block flex-1" />
+            <span className="text-sm text-white">
+              {dpi <= 150
+                ? "Standard \u2014 good across the room"
+                : dpi <= 200
+                  ? "High quality \u2014 good at arm's length"
+                  : "Maximum \u2014 good handheld"}
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
+              Viewing Distance
+            </span>
+            <div className="flex gap-1.5">
+              {VIEWING_PRESETS.map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => setViewingDistanceFt(preset.distanceFt)}
+                  className={`cursor-pointer rounded-lg px-[18px] py-[7px] text-sm font-medium transition-all duration-200 ${
+                    viewingDistanceFt === preset.distanceFt
+                      ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
+                      : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+            <span className="hidden sm:block flex-1" />
+            <span className="text-sm text-white">
+              {VIEWING_PRESETS.find((p) => p.distanceFt === viewingDistanceFt)?.description ?? `${viewingDistanceFt} ft`}
+              {" \u2014 "}
+              <span className="font-mono text-zinc-400">
+                {Math.ceil(getViewingPPIFromDistance(viewingDistanceFt))} PPI min
+              </span>
+            </span>
+          </>
+        )}
       </div>
 
       <p className="mb-7 mt-[-16px] text-sm leading-relaxed text-zinc-500">
-        This calculator uses pixel dimensions only (PPI) — the DPI metadata
-        embedded in your image file doesn't affect the results.{" "}
-        <a
-          href="#ppi-vs-dpi"
-          className="text-zinc-400 underline decoration-zinc-700 underline-offset-2 transition-colors hover:text-zinc-200"
-        >
-          Learn more ↓
-        </a>
+        {mode === "print" ? (
+          <>
+            This calculator uses pixel dimensions only (PPI) — the DPI metadata
+            embedded in your image file doesn't affect the results.{" "}
+            <a
+              href="#ppi-vs-dpi"
+              className="text-zinc-400 underline decoration-zinc-700 underline-offset-2 transition-colors hover:text-zinc-200"
+            >
+              Learn more ↓
+            </a>
+          </>
+        ) : (
+          <>
+            Billboard sizes are rated against the minimum PPI the human eye can
+            resolve at the selected viewing distance, using 1-arcminute visual
+            acuity. Quality ratings reflect file resolution, not viewing conditions.
+          </>
+        )}
       </p>
 
       {/* Summary Cards */}
       <div className="mb-6 flex flex-wrap gap-3">
         <div className="min-w-[160px] flex-1 rounded-[10px] border border-[#1c1c21] bg-[#131316] px-[18px] py-3.5">
           <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
-            Printable sizes
+            {mode === "print" ? "Printable sizes" : "Usable sizes"}
           </div>
           <div className="text-2xl font-bold text-green-500">
             {excellent}
@@ -154,10 +230,14 @@ export default function PrintCalculator() {
         </div>
         <div className="min-w-[160px] flex-1 rounded-[10px] border border-[#1c1c21] bg-[#131316] px-[18px] py-3.5">
           <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
-            Max PPI at largest
+            {mode === "print" ? "Max PPI at largest" : "Min PPI required"}
           </div>
           <div className="font-mono text-2xl font-bold text-zinc-400">
-            {lastExcellent ? lastExcellent.effectiveDPI : "—"}
+            {mode === "print"
+              ? lastExcellent
+                ? lastExcellent.effectiveDPI
+                : "—"
+              : Math.ceil(getViewingPPIFromDistance(viewingDistanceFt))}
           </div>
         </div>
       </div>
@@ -169,14 +249,16 @@ export default function PrintCalculator() {
           <div>Coverage</div>
           <div className="text-right">Your PPI</div>
           <div className="text-right sm:hidden">Quality</div>
-          <div className="hidden sm:block text-right">Min PPI</div>
+          <div className="hidden sm:block text-right">
+            {mode === "print" ? "Min PPI" : "Req. PPI"}
+          </div>
           <div className="hidden sm:block text-right">Quality</div>
         </div>
 
         {data.map((item, i) => {
           const sc = STATUS_CONFIG[item.status];
           const coveragePercent = Math.min(
-            (item.effectiveDPI / dpi) * 100,
+            (item.effectiveDPI / item.targetDpi) * 100,
             100,
           );
           return (
@@ -270,12 +352,12 @@ export default function PrintCalculator() {
               </span>
               {" — "}
               {key === "perfect"
-                ? `≥ ${dpi} PPI (meets target)`
+                ? `≥ ${activeDpi} PPI (meets target)`
                 : key === "acceptable"
-                  ? `≥ ${Math.round(dpi * 0.85)} PPI (near target)`
+                  ? `≥ ${Math.round(activeDpi * 0.85)} PPI (near target)`
                   : key === "stretch"
-                    ? `≥ ${Math.round(dpi * 0.6)} PPI (needs more pixels)`
-                    : `< ${Math.round(dpi * 0.6)} PPI (not enough pixels)`}
+                    ? `≥ ${Math.round(activeDpi * 0.6)} PPI (needs more pixels)`
+                    : `< ${Math.round(activeDpi * 0.6)} PPI (not enough pixels)`}
             </span>
           </div>
         ))}
@@ -285,24 +367,41 @@ export default function PrintCalculator() {
         <li>Both landscape and portrait orientations are considered.</li>
         <li>
           <span className="text-zinc-200">"Your PPI"</span> shows the
-          effective resolution your {pixelW}x{pixelH} file achieves at each
-          print size.
+          effective resolution your {pixelW}x{pixelH} file achieves at each{" "}
+          {mode === "billboard" ? "billboard" : "print"} size.
         </li>
-        <li>
-          Quality ratings compare this against your{" "}
-          <span className="text-zinc-200">{dpi} PPI target</span> — they
-          reflect whether your image has enough pixels, not whether the print
-          will look bad.
-        </li>
-        <li>
-          <span className="text-blue-400">Min PPI</span> is the lowest
-          resolution the human eye can distinguish at a typical viewing
-          distance for that size (1.5x the diagonal).
-        </li>
-        <li>
-          If your PPI exceeds the min, the print will look sharp in practice —
-          even if it's below your target.
-        </li>
+        {mode === "print" ? (
+          <>
+            <li>
+              Quality ratings compare this against your{" "}
+              <span className="text-zinc-200">{dpi} PPI target</span> — they
+              reflect whether your image has enough pixels, not whether the
+              print will look bad.
+            </li>
+            <li>
+              <span className="text-blue-400">Min PPI</span> is the lowest
+              resolution the human eye can distinguish at a typical viewing
+              distance for that size (1.5× the diagonal).
+            </li>
+            <li>
+              If your PPI exceeds the min, the print will look sharp in
+              practice — even if it's below your target.
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              Quality ratings compare your PPI against the{" "}
+              <span className="text-zinc-200">
+                {Math.ceil(getViewingPPIFromDistance(viewingDistanceFt))} PPI
+              </span>{" "}
+              minimum the human eye can resolve at{" "}
+              <span className="text-zinc-200">{viewingDistanceFt} ft</span>{" "}
+              (1-arcminute visual acuity). Below this, the image will appear
+              soft regardless of print quality.
+            </li>
+          </>
+        )}
       </ul>
     </>
   );

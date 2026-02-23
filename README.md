@@ -45,14 +45,6 @@ pnpm build
 pnpm preview
 ```
 
-## Testing
-
-```bash
-pnpm test
-```
-
-Tests use [Vitest](https://vitest.dev/) and [Testing Library](https://testing-library.com/).
-
 ## Contributing
 
 Bug reports and pull requests are welcome. For major changes, open an issue first to discuss what you'd like to change.

@@ -126,7 +126,7 @@ function PrintSizeChart() {
         {/* Header */}
         <div className="mb-5">
           <div className="mb-1.5 flex items-center gap-2.5">
-            <div className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+            <span className="text-sm">🖨️</span>
             <span className="font-mono text-xs uppercase tracking-[1.5px] text-zinc-500">
               Print Calculator
             </span>
@@ -453,13 +453,21 @@ function PrintSizeChart() {
                 rel="noopener noreferrer"
                 className="text-sm text-zinc-400 underline decoration-zinc-700 underline-offset-2 transition-colors hover:text-zinc-200"
               >
-                https://www.youtube.com/watch?v=6OxoqkZwmmk
+                "How many pixels per inch do you need to make large prints?" by Simon d'Entremont
               </a>
             </li>
           </ul>
         </div>
+        {/* Disclaimer */}
+        <p className="mt-8 text-center text-lg leading-relaxed text-white">
+          <span className="mr-2">⚠️</span>Quality ratings are based on perceptual heuristics (viewing distance,
+          visual acuity estimates) and are intended as a practical guide, not a
+          definitive standard. Calculations may be inaccurate. Results may vary
+          depending on the printer, paper, viewing conditions, and individual
+          perception. Use at your own risk.
+        </p>
         {/* Footer */}
-        <div className="mt-10 mb-2 flex items-center justify-center gap-4">
+        <div className="mt-6 mb-2 flex items-center justify-center gap-4">
           <span className="font-mono text-xs text-zinc-600">
             Made by Yameen
           </span>

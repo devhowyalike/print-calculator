@@ -1,6 +1,6 @@
 {
   "name": "print-calculator",
-  "private": true,
+  "private": false,
   "type": "module",
   "imports": {
     "#/*": "./src/*"

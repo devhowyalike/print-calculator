@@ -26,6 +26,8 @@ It also shows the perceptual minimum PPI for each size (based on typical viewing
 
 ## Getting Started
 
+> Requires [pnpm](https://pnpm.io). Install it with `npm i -g pnpm` if needed.
+
 ```bash
 pnpm install
 pnpm dev
@@ -57,3 +59,11 @@ pnpm dlx shadcn@latest add button
 ## Adding Routes
 
 Drop a new file into `src/routes/` — TanStack Router picks it up automatically via file-based routing. The root layout lives in `src/routes/__root.tsx`.
+
+## Contributing
+
+Bug reports and pull requests are welcome. For major changes, open an issue first to discuss what you'd like to change.
+
+## License
+
+[MIT](LICENSE)

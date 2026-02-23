@@ -175,7 +175,7 @@ export default function PrintCalculator() {
             </div>
             <span className="hidden sm:block flex-1" />
             <span className="text-sm text-white">
-              {VIEWING_PRESETS.find((p) => p.distanceFt === viewingDistanceFt)?.description ?? `${viewingDistanceFt} ft`}
+              {VIEWING_PRESETS.find((p) => p.distanceFt === viewingDistanceFt)?.description ?? ""} ({viewingDistanceFt} ft)
               {" \u2014 "}
               <span className="font-mono text-zinc-400">
                 {Math.ceil(getViewingPPIFromDistance(viewingDistanceFt))} PPI min

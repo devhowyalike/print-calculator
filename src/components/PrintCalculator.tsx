@@ -189,11 +189,6 @@ export default function PrintCalculator() {
             onClick={() => {
               setPixelWStr(pixelHStr);
               setPixelHStr(pixelWStr);
-              const inferred = inferAspectRatioFromPixels(pixelH, pixelW);
-              if (inferred)
-                setAspectRatio(
-                  inferred as (typeof ASPECT_RATIOS)[number]["value"],
-                );
             }}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-[#1c1c21] text-zinc-500 transition-colors hover:border-zinc-600 hover:bg-[#25252b] hover:text-zinc-300"
             title="Swap dimensions"

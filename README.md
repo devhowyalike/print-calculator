@@ -2,7 +2,7 @@
 
 A tool for photographers, designers and artists to determine which print sizes their digital images can support at a given quality level.
 
-![Print Calculator screenshot](public/print-screenshot.png)
+<img src="public/print-screenshot.png" alt="Print Calculator screenshot" style="max-width: 650px;">
 
 Enter your image's pixel dimensions and choose a target PPI — the calculator evaluates 15 common print sizes (4×6" through 36×48") and rates each one as **Excellent**, **Good**, **Marginal**, or **Too Low** based on the effective resolution your file achieves.
 

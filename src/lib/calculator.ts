@@ -83,6 +83,45 @@ export function getAspectRatioLabel(
   return isPortrait ? `${preset[1]}:${preset[0]}` : `${preset[0]}:${preset[1]}`;
 }
 
+/** Longest-side progression for generated sizes (inches for print, feet×12 for billboard). */
+const LONG_SIDE_PROGRESSION_PRINT = [4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 36];
+const LONG_SIDE_PROGRESSION_BILLBOARD = [60, 72, 96, 120, 144, 192, 240, 288, 360, 432, 480]; // inches (5–40 ft)
+
+function formatSizeLabel(n: number, inFeet: boolean): string {
+  if (inFeet) return String(Math.round(n / 12));
+  return n % 1 === 0 ? String(Math.round(n)) : n.toFixed(1);
+}
+
+/** Generates exactly 11 print/billboard sizes that match the target aspect ratio. */
+export function generateSizesForRatio(
+  targetRatio: number,
+  mode: 'print' | 'billboard',
+): { name: string; w: number; h: number }[] {
+  if (targetRatio <= 0) return [];
+  const progression =
+    mode === 'print'
+      ? LONG_SIDE_PROGRESSION_PRINT
+      : LONG_SIDE_PROGRESSION_BILLBOARD;
+  const suffix = mode === 'print' ? '"' : ' ft';
+  const inFeet = mode === 'billboard';
+
+  const round = (n: number) => Math.round(n * 100) / 100;
+
+  return progression.map((longSide) => {
+    let w: number;
+    let h: number;
+    if (targetRatio >= 1) {
+      w = longSide;
+      h = round(longSide / targetRatio);
+    } else {
+      h = longSide;
+      w = round(longSide * targetRatio);
+    }
+    const name = `${formatSizeLabel(w, inFeet)}×${formatSizeLabel(h, inFeet)}${suffix}`;
+    return { name, w, h };
+  });
+}
+
 /** Returns true if a size's aspect ratio matches the target (effectiveW/effectiveH). */
 export function sizeMatchesAspectRatio(
   size: { w: number; h: number },

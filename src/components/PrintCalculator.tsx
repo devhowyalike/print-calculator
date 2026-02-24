@@ -19,7 +19,7 @@ import {
   getCroppedDimensions,
   inferAspectRatioFromPixels,
   getAspectRatioLabel,
-  sizeMatchesAspectRatio,
+  generateSizesForRatio,
   getViewingPPI,
   getViewingPPIFromDistance,
 } from "../lib/calculator";
@@ -66,7 +66,7 @@ export default function PrintCalculator() {
   const allSizes = [...squareSizes, ...baseSizes];
   const sizes =
     targetRatio > 0
-      ? allSizes.filter((s) => sizeMatchesAspectRatio(s, targetRatio))
+      ? generateSizesForRatio(targetRatio, mode)
       : allSizes;
 
   const currentPreset = VIEWING_PRESETS.find(
@@ -88,9 +88,13 @@ export default function PrintCalculator() {
       const status = getStatus(size, targetDpi, w, h);
       const fineForDistance =
         effectiveDPI < targetDpi && effectiveDPI >= viewingPPI;
+      const formatDim = (n: number) =>
+        n % 1 < 0.001 || n % 1 > 0.999
+          ? Math.round(n)
+          : parseFloat(n.toFixed(1));
       const displayName =
         mode === "print"
-          ? `${display.w % 1 ? display.w : Math.round(display.w)}×${display.h % 1 ? display.h : Math.round(display.h)}"`
+          ? `${formatDim(display.w)}×${formatDim(display.h)}"`
           : `${Math.round(display.w / 12)}×${Math.round(display.h / 12)} ft`;
       return {
         ...size,
@@ -203,8 +207,71 @@ export default function PrintCalculator() {
         </span>
       </div>
 
-      {/* Aspect ratio crop */}
+      {/* PPI Selector / Viewing Distance */}
       <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
+        {mode === "print" ? (
+          <>
+            <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
+              Target PPI
+            </span>
+            <div className="flex gap-1.5">
+              {([150, 200, 300] as const).map((val) => (
+                <button
+                  key={val}
+                  onClick={() => setDpi(val)}
+                  className={`cursor-pointer rounded-lg px-[18px] py-[7px] font-mono text-sm font-medium transition-all duration-200 ${
+                    dpi === val
+                      ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
+                      : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
+                  }`}
+                >
+                  {val}
+                </button>
+              ))}
+            </div>
+            <span className="hidden sm:block flex-1" />
+            <span className="text-sm text-white">
+              {dpi <= 150
+                ? "Standard \u2014 good across the room"
+                : dpi <= 200
+                  ? "High quality \u2014 good at arm's length"
+                  : "Maximum \u2014 good handheld"}
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
+              Viewing Distance
+            </span>
+            <div className="flex gap-1.5">
+              {VIEWING_PRESETS.map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => setViewingDistanceFt(preset.distanceFt)}
+                  className={`cursor-pointer rounded-lg px-[18px] py-[7px] text-sm font-medium transition-all duration-200 ${
+                    viewingDistanceFt === preset.distanceFt
+                      ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
+                      : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+            <span className="hidden sm:block flex-1" />
+            <span className="text-sm text-white">
+              {currentPreset?.description ?? ""} (~{viewingDistanceFt} ft)
+              {" \u2014 "}
+              <span className="font-mono text-zinc-400">
+                {currentPresetPPI} PPI target
+              </span>
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* Aspect ratio crop */}
+      <div className="mb-7 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
         <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
           Aspect Ratio
         </span>
@@ -266,69 +333,6 @@ export default function PrintCalculator() {
                 </>
               )}
           </span>
-        )}
-      </div>
-
-      {/* PPI Selector / Viewing Distance */}
-      <div className="mb-7 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
-        {mode === "print" ? (
-          <>
-            <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
-              Target PPI
-            </span>
-            <div className="flex gap-1.5">
-              {([150, 200, 300] as const).map((val) => (
-                <button
-                  key={val}
-                  onClick={() => setDpi(val)}
-                  className={`cursor-pointer rounded-lg px-[18px] py-[7px] font-mono text-sm font-medium transition-all duration-200 ${
-                    dpi === val
-                      ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
-                      : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
-                  }`}
-                >
-                  {val}
-                </button>
-              ))}
-            </div>
-            <span className="hidden sm:block flex-1" />
-            <span className="text-sm text-white">
-              {dpi <= 150
-                ? "Standard \u2014 good across the room"
-                : dpi <= 200
-                  ? "High quality \u2014 good at arm's length"
-                  : "Maximum \u2014 good handheld"}
-            </span>
-          </>
-        ) : (
-          <>
-            <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
-              Viewing Distance
-            </span>
-            <div className="flex gap-1.5">
-              {VIEWING_PRESETS.map((preset) => (
-                <button
-                  key={preset.label}
-                  onClick={() => setViewingDistanceFt(preset.distanceFt)}
-                  className={`cursor-pointer rounded-lg px-[18px] py-[7px] text-sm font-medium transition-all duration-200 ${
-                    viewingDistanceFt === preset.distanceFt
-                      ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
-                      : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
-                  }`}
-                >
-                  {preset.label}
-                </button>
-              ))}
-            </div>
-            <span className="hidden sm:block flex-1" />
-            <span className="text-sm text-white">
-              {currentPreset?.description ?? ""} (~{viewingDistanceFt} ft)
-              {" \u2014 "}
-              <span className="font-mono text-zinc-400">
-                {currentPresetPPI} PPI target
-              </span>
-            </span>
-          </>
         )}
       </div>
 

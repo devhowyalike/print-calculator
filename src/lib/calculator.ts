@@ -43,7 +43,6 @@ export const ASPECT_RATIOS = [
   { label: '4:3', value: [4, 3] as const },
   { label: '5:4', value: [5, 4] as const },
   { label: '5:7', value: [5, 7] as const },
-  { label: '4:5', value: [4, 5] as const },
 ] as const;
 
 const ASPECT_RATIO_PRESETS = ASPECT_RATIOS.filter(
@@ -93,8 +92,15 @@ export function sizeMatchesAspectRatio(
   if (targetRatio <= 0) return false;
   const sizeRatioLandscape = size.w / size.h;
   const sizeRatioPortrait = size.h / size.w;
-  const landMatch = Math.abs(sizeRatioLandscape - targetRatio) / targetRatio <= tolerance;
-  const portMatch = Math.abs(sizeRatioPortrait - targetRatio) / targetRatio <= tolerance;
+  // Use symmetric denominator so swapping dimensions gives the same result
+  const landMatch =
+    Math.abs(sizeRatioLandscape - targetRatio) /
+      Math.max(targetRatio, sizeRatioLandscape) <=
+    tolerance;
+  const portMatch =
+    Math.abs(sizeRatioPortrait - targetRatio) /
+      Math.max(targetRatio, sizeRatioPortrait) <=
+    tolerance;
   return landMatch || portMatch;
 }
 

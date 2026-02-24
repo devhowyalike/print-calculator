@@ -1,5 +1,4 @@
-import { STATUS_CONFIG } from "../lib/calculator";
-import type { Status } from "../lib/calculator";
+import { STATUS_CONFIG, type Status } from "../lib/calculator";
 
 type QualityLegendProps = {
   activeDpi: number;

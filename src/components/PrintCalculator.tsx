@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
-import type { Mode } from "../types";
-import type { SizeDataItem } from "../types";
 import {
+  type Mode,
+  type SizeDataItem,
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
   COMMON_SIZES,
@@ -17,12 +17,10 @@ import {
   generateSizesForRatio,
   getViewingPPI,
   getViewingPPIFromDistance,
-} from "../lib/calculator";
-import {
   getTargetRatio,
   isExactAspectMatch,
   formatDisplayName,
-} from "../utils/printUtils";
+} from "../lib/calculator";
 
 import CalculatorHeader from "./CalculatorHeader";
 import DimensionInputs from "./DimensionInputs";
@@ -45,6 +43,7 @@ export default function PrintCalculator() {
 
   const pixelW = parseInt(pixelWStr) || 0;
   const pixelH = parseInt(pixelHStr) || 0;
+  const megapixels = ((pixelW * pixelH) / 1000000).toFixed(1);
 
   const { w: effectiveW, h: effectiveH } = getCroppedDimensions(
     pixelW,
@@ -52,7 +51,7 @@ export default function PrintCalculator() {
     aspectRatio,
   );
 
-  const targetRatio = getTargetRatio(effectiveW, effectiveH);
+  const targetRatio = Math.round(getTargetRatio(effectiveW, effectiveH) * 1000) / 1000;
   const closestAspectRatio =
     pixelW > 0 && pixelH > 0
       ? inferAspectRatioFromPixels(pixelW, pixelH)
@@ -147,6 +146,7 @@ export default function PrintCalculator() {
       <DimensionInputs
         pixelWStr={pixelWStr}
         pixelHStr={pixelHStr}
+        megapixels={megapixels}
         onPixelWChange={setPixelWStr}
         onPixelHChange={setPixelHStr}
         onSwap={handleSwap}

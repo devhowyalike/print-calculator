@@ -1,4 +1,4 @@
-import type { Mode } from "../types";
+import type { Mode } from "../lib/calculator";
 
 type InfoParagraphProps = {
   mode: Mode;

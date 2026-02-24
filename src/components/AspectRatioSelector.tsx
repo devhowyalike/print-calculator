@@ -1,4 +1,8 @@
-import { ASPECT_RATIOS, getAspectRatioLabel } from "../lib/calculator";
+import {
+  ASPECT_RATIOS,
+  getAspectRatioLabel,
+  toggleButtonClass,
+} from "../lib/calculator";
 
 type AspectRatioValue = (typeof ASPECT_RATIOS)[number]["value"];
 
@@ -24,7 +28,7 @@ export default function AspectRatioSelector({
   onAspectRatioChange,
 }: AspectRatioSelectorProps) {
   return (
-    <div className="mb-7 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
+    <div className="mb-7 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-app-bg px-[18px] py-3.5">
       <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
         Aspect Ratio
       </span>
@@ -54,11 +58,7 @@ export default function AspectRatioSelector({
             <button
               key={ar.label}
               onClick={() => onAspectRatioChange(ar.value)}
-              className={`cursor-pointer rounded-lg px-[14px] py-[7px] text-sm font-medium transition-all duration-200 ${
-                isSelected
-                  ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
-                  : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
-              }`}
+              className={`cursor-pointer rounded-lg px-[14px] py-[7px] text-sm font-medium transition-all duration-200 ${toggleButtonClass(isSelected)}`}
             >
               <span
                 className={

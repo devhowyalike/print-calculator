@@ -1,7 +1,10 @@
-import { PPI_OPTIONS, getPPIDescription } from "../lib/constants";
-import { VIEWING_PRESETS } from "../lib/calculator";
-
-type ViewingPreset = (typeof VIEWING_PRESETS)[number];
+import {
+  PPI_OPTIONS,
+  getPPIDescription,
+  VIEWING_PRESETS,
+  type ViewingPreset,
+  toggleButtonClass,
+} from "../lib/calculator";
 
 type PPIOrViewingSelectorProps =
   | {
@@ -22,7 +25,7 @@ export default function PPIOrViewingSelector(
 ) {
   if (props.mode === "print") {
     return (
-      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
+      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-app-bg px-[18px] py-3.5">
         <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
           Target PPI
         </span>
@@ -31,11 +34,7 @@ export default function PPIOrViewingSelector(
             <button
               key={val}
               onClick={() => props.onDpiChange(val)}
-              className={`cursor-pointer rounded-lg px-[18px] py-[7px] font-mono text-sm font-medium transition-all duration-200 ${
-                props.dpi === val
-                  ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
-                  : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
-              }`}
+              className={`cursor-pointer rounded-lg px-[18px] py-[7px] font-mono text-sm font-medium transition-all duration-200 ${toggleButtonClass(props.dpi === val)}`}
             >
               {val}
             </button>
@@ -48,7 +47,7 @@ export default function PPIOrViewingSelector(
   }
 
   return (
-    <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
+    <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-app-bg px-[18px] py-3.5">
       <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
         Viewing Distance
       </span>
@@ -57,11 +56,7 @@ export default function PPIOrViewingSelector(
           <button
             key={preset.label}
             onClick={() => props.onViewingDistanceChange(preset.distanceFt)}
-            className={`cursor-pointer rounded-lg px-[18px] py-[7px] text-sm font-medium transition-all duration-200 ${
-              props.viewingDistanceFt === preset.distanceFt
-                ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
-                : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
-            }`}
+            className={`cursor-pointer rounded-lg px-[18px] py-[7px] text-sm font-medium transition-all duration-200 ${toggleButtonClass(props.viewingDistanceFt === preset.distanceFt)}`}
           >
             {preset.label}
           </button>

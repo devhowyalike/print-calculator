@@ -1,4 +1,4 @@
-import type { SizeDataItem, Mode } from "../types";
+import type { SizeDataItem, Mode } from "../lib/calculator";
 
 type SummaryCardsProps = {
   mode: Mode;
@@ -15,7 +15,7 @@ export default function SummaryCards({
 }: SummaryCardsProps) {
   return (
     <div className="mb-6 flex flex-wrap gap-3">
-      <div className="min-w-[160px] flex-1 rounded-[10px] border border-[#1c1c21] bg-[#131316] px-[18px] py-3.5">
+      <div className="min-w-[160px] flex-1 rounded-[10px] border border-app-card bg-app-bg px-[18px] py-3.5">
         <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
           {mode === "print" ? "Printable sizes" : "Usable sizes"}
         </div>
@@ -27,7 +27,7 @@ export default function SummaryCards({
           </span>
         </div>
       </div>
-      <div className="min-w-[160px] flex-1 rounded-[10px] border border-[#1c1c21] bg-[#131316] px-[18px] py-3.5">
+      <div className="min-w-[160px] flex-1 rounded-[10px] border border-app-card bg-app-bg px-[18px] py-3.5">
         <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
           Largest excellent
         </div>
@@ -35,7 +35,7 @@ export default function SummaryCards({
           {lastExcellent ? lastExcellent.displayName : "—"}
         </div>
       </div>
-      <div className="min-w-[160px] flex-1 rounded-[10px] border border-[#1c1c21] bg-[#131316] px-[18px] py-3.5">
+      <div className="min-w-[160px] flex-1 rounded-[10px] border border-app-card bg-app-bg px-[18px] py-3.5">
         <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
           PPI at largest usable size
         </div>

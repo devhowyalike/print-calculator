@@ -1,9 +1,4 @@
-type ViewingPreset = {
-  label: string;
-  distanceFt: number;
-  ppi?: number;
-  description?: string;
-};
+import type { ViewingPreset } from "../lib/calculator";
 
 type HelpNotesProps =
   | {

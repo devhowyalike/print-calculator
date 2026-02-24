@@ -1,11 +1,8 @@
-import { COLORS } from "../lib/constants";
-
 export default function PPIExplainer() {
   return (
     <div
       id="ppi-vs-dpi"
-      className="mt-12 scroll-mt-6 rounded-[14px] border px-6 py-6"
-      style={{ borderColor: COLORS.bgCard, backgroundColor: COLORS.bg }}
+      className="mt-12 scroll-mt-6 rounded-[14px] border border-app-card bg-app-bg px-6 py-6"
     >
       <div className="mb-4 flex items-center gap-2.5">
         <div className="h-2 w-2 rounded-full bg-zinc-500 shadow-[0_0_6px_rgba(161,161,170,0.3)]" />
@@ -22,13 +19,7 @@ export default function PPIExplainer() {
       </p>
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2">
-        <div
-          className="rounded-[10px] border px-5 py-4"
-          style={{
-            borderColor: COLORS.bgCard,
-            backgroundColor: COLORS.bgCardDark,
-          }}
-        >
+        <div className="rounded-[10px] border border-app-card bg-app-card-dark px-5 py-4">
           <div className="mb-2 text-md font-semibold uppercase tracking-[1px] text-zinc-500">
             PPI — Pixels Per Inch
           </div>
@@ -41,13 +32,7 @@ export default function PPIExplainer() {
             file at each size.
           </p>
         </div>
-        <div
-          className="rounded-[10px] border px-5 py-4"
-          style={{
-            borderColor: COLORS.bgCard,
-            backgroundColor: COLORS.bgCardDark,
-          }}
-        >
+        <div className="rounded-[10px] border border-app-card bg-app-card-dark px-5 py-4">
           <div className="mb-2 text-md font-semibold uppercase tracking-[1px] text-zinc-500">
             DPI — Dots Per Inch
           </div>
@@ -61,13 +46,7 @@ export default function PPIExplainer() {
         </div>
       </div>
 
-      <div
-        className="rounded-[10px] border px-5 py-4"
-        style={{
-          borderColor: COLORS.bgCard,
-          backgroundColor: COLORS.bgCardDark,
-        }}
-      >
+      <div className="rounded-[10px] border border-app-card bg-app-card-dark px-5 py-4">
         <div className="mb-2 text-md font-semibold uppercase tracking-[1px] text-zinc-500">
           Why it matters
         </div>

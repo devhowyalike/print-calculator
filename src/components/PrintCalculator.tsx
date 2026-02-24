@@ -27,8 +27,12 @@ export default function PrintCalculator() {
 
   const sizes = mode === "print" ? COMMON_SIZES : BILLBOARD_SIZES;
 
-  const currentPreset = VIEWING_PRESETS.find((p) => p.distanceFt === viewingDistanceFt);
-  const currentPresetPPI = currentPreset?.ppi ?? Math.ceil(getViewingPPIFromDistance(viewingDistanceFt));
+  const currentPreset = VIEWING_PRESETS.find(
+    (p) => p.distanceFt === viewingDistanceFt,
+  );
+  const currentPresetPPI =
+    currentPreset?.ppi ??
+    Math.ceil(getViewingPPIFromDistance(viewingDistanceFt));
 
   const data = useMemo(() => {
     const w = pixelW;
@@ -36,13 +40,19 @@ export default function PrintCalculator() {
     return sizes.map((size) => {
       const effectiveDPI = Math.round(getEffectiveDPI(size, w, h));
       const viewingPPI =
-        mode === "print"
-          ? getViewingPPI(size)
-          : currentPresetPPI;
+        mode === "print" ? getViewingPPI(size) : currentPresetPPI;
       const targetDpi = mode === "print" ? dpi : currentPresetPPI;
       const status = getStatus(size, targetDpi, w, h);
-      const fineForDistance = effectiveDPI < targetDpi && effectiveDPI >= viewingPPI;
-      return { ...size, status, effectiveDPI, viewingPPI, fineForDistance, targetDpi };
+      const fineForDistance =
+        effectiveDPI < targetDpi && effectiveDPI >= viewingPPI;
+      return {
+        ...size,
+        status,
+        effectiveDPI,
+        viewingPPI,
+        fineForDistance,
+        targetDpi,
+      };
     });
   }, [mode, dpi, currentPresetPPI, pixelW, pixelH, sizes]);
 
@@ -63,8 +73,7 @@ export default function PrintCalculator() {
 
         <h2 className="mt-1 mb-4 text-xl font-normal text-white">
           A tool for photographers, designers and artists to determine which
-          print sizes their digital images can support at a given quality
-          level.
+          print sizes their digital images can support at a given quality level.
         </h2>
 
         {/* Mode toggle */}
@@ -201,9 +210,9 @@ export default function PrintCalculator() {
           </>
         ) : (
           <>
-            Billboard sizes are rated against industry-standard PPI targets
-            for the selected viewing context. Quality ratings reflect whether
-            your file has enough pixels for sharp output at that distance.
+            Billboard sizes are rated against industry-standard PPI targets for
+            the selected viewing context. Quality ratings reflect whether your
+            file has enough pixels for sharp output at that distance.
           </>
         )}
       </p>
@@ -365,11 +374,11 @@ export default function PrintCalculator() {
         ))}
       </div>
 
-      <ul className="mt-6 space-y-2.5 list-disc pl-5 text-lg leading-relaxed text-zinc-400">
+      <ul className="mt-6 space-y-2.5 list-disc pl-5 text-lg leading-relaxed text-zinc-400 text-pretty">
         <li>Both landscape and portrait orientations are considered.</li>
         <li>
-          <span className="text-zinc-200">"Your PPI"</span> shows the
-          effective resolution your {pixelW}x{pixelH} file achieves at each{" "}
+          <span className="text-zinc-200">"Your PPI"</span> shows the effective
+          resolution your {pixelW}x{pixelH} file achieves at each{" "}
           {mode === "billboard" ? "billboard" : "print"} size.
         </li>
         {mode === "print" ? (
@@ -386,20 +395,19 @@ export default function PrintCalculator() {
               distance for that size (1.5× the diagonal).
             </li>
             <li>
-              If your PPI exceeds the min, the print will look sharp in
-              practice — even if it's below your target.
+              If your PPI exceeds the min, the print will look sharp in practice
+              — even if it's below your target.
             </li>
           </>
         ) : (
           <>
             <li>
               Quality ratings compare your PPI against the{" "}
-              <span className="text-zinc-200">
-                {currentPresetPPI} PPI
-              </span>{" "}
+              <span className="text-zinc-200">{currentPresetPPI} PPI</span>{" "}
               industry standard for{" "}
               <span className="text-zinc-200">
-                {currentPreset?.label.toLowerCase() ?? "this"} viewing (~{viewingDistanceFt} ft)
+                {currentPreset?.label.toLowerCase() ?? "this"} viewing (~
+                {viewingDistanceFt} ft)
               </span>
               . Below this, the image will look soft at that distance.
             </li>

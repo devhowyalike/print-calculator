@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import type { Mode } from "../types";
 import type { SizeDataItem } from "../types";
 import {
@@ -11,14 +11,18 @@ import {
   VIEWING_PRESETS,
   ASPECT_RATIOS,
   getStatus,
-  getEffectiveDPI,
-  getDisplayDimensions,
+  getDisplayAndEffectiveDPI,
   getCroppedDimensions,
   inferAspectRatioFromPixels,
   generateSizesForRatio,
   getViewingPPI,
   getViewingPPIFromDistance,
 } from "../lib/calculator";
+import {
+  getTargetRatio,
+  isExactAspectMatch,
+  formatDisplayName,
+} from "../utils/printUtils";
 
 import CalculatorHeader from "./CalculatorHeader";
 import DimensionInputs from "./DimensionInputs";
@@ -48,58 +52,54 @@ export default function PrintCalculator() {
     aspectRatio,
   );
 
-  const targetRatio =
-    effectiveW > 0 && effectiveH > 0 ? effectiveW / effectiveH : 0;
+  const targetRatio = getTargetRatio(effectiveW, effectiveH);
   const closestAspectRatio =
     pixelW > 0 && pixelH > 0
       ? inferAspectRatioFromPixels(pixelW, pixelH)
       : null;
-  const isExactAspectMatch =
-    closestAspectRatio &&
-    pixelW > 0 &&
-    pixelH > 0 &&
-    (() => {
-      const ratio = Math.max(pixelW, pixelH) / Math.min(pixelW, pixelH);
-      const [rW, rH] = closestAspectRatio;
-      const presetRatio = Math.max(rW, rH) / Math.min(rW, rH);
-      return Math.abs(ratio - presetRatio) < 0.0001;
-    })();
-
-  const baseSizes = mode === "print" ? COMMON_SIZES : BILLBOARD_SIZES;
-  const squareSizes =
-    mode === "print" ? SQUARE_PRINT_SIZES : SQUARE_BILLBOARD_SIZES;
-  const allSizes = [...squareSizes, ...baseSizes];
-  const sizes =
-    targetRatio > 0 ? generateSizesForRatio(targetRatio, mode) : allSizes;
-
-  const currentPreset = VIEWING_PRESETS.find(
-    (p) => p.distanceFt === viewingDistanceFt,
+  const exactAspectMatch = isExactAspectMatch(
+    pixelW,
+    pixelH,
+    closestAspectRatio,
   );
-  const currentPresetPPI =
-    currentPreset?.ppi ??
-    Math.ceil(getViewingPPIFromDistance(viewingDistanceFt));
 
-  const data = useMemo(() => {
+  const sizes = useMemo(() => {
+    const baseSizes = mode === "print" ? COMMON_SIZES : BILLBOARD_SIZES;
+    const squareSizes =
+      mode === "print" ? SQUARE_PRINT_SIZES : SQUARE_BILLBOARD_SIZES;
+    const allSizes = [...squareSizes, ...baseSizes];
+    return targetRatio > 0 ? generateSizesForRatio(targetRatio, mode) : allSizes;
+  }, [mode, targetRatio]);
+
+  const { currentPreset, currentPresetPPI } = useMemo(() => {
+    const preset = VIEWING_PRESETS.find(
+      (p) => p.distanceFt === viewingDistanceFt,
+    );
+    const ppi =
+      preset?.ppi ?? Math.ceil(getViewingPPIFromDistance(viewingDistanceFt));
+    return { currentPreset: preset, currentPresetPPI: ppi };
+  }, [viewingDistanceFt]);
+
+  const { data, excellent, lastExcellent } = useMemo(() => {
     const w = effectiveW;
     const h = effectiveH;
-    return sizes.map((size) => {
-      const display = getDisplayDimensions(size, w, h);
-      const effectiveDPI = Math.round(getEffectiveDPI(size, w, h));
+    let excellentCount = 0;
+    let lastPerfect: SizeDataItem | undefined;
+    const result = sizes.map((size) => {
+      const { display, effectiveDPI: rawDpi } = getDisplayAndEffectiveDPI(
+        size,
+        w,
+        h,
+      );
+      const effectiveDPI = Math.round(rawDpi);
       const viewingPPI =
         mode === "print" ? getViewingPPI(size) : currentPresetPPI;
       const targetDpi = mode === "print" ? dpi : currentPresetPPI;
       const status = getStatus(size, targetDpi, w, h);
       const fineForDistance =
         effectiveDPI < targetDpi && effectiveDPI >= viewingPPI;
-      const formatDim = (n: number) =>
-        n % 1 < 0.001 || n % 1 > 0.999
-          ? Math.round(n)
-          : parseFloat(n.toFixed(1));
-      const displayName =
-        mode === "print"
-          ? `${formatDim(display.w)}×${formatDim(display.h)}"`
-          : `${Math.round(display.w / 12)}×${Math.round(display.h / 12)} ft`;
-      return {
+      const displayName = formatDisplayName(display.w, display.h, mode);
+      const item = {
         ...size,
         displayName,
         status,
@@ -108,23 +108,40 @@ export default function PrintCalculator() {
         fineForDistance,
         targetDpi,
       } satisfies SizeDataItem;
+      if (status === "perfect") {
+        excellentCount++;
+        lastPerfect = item;
+      }
+      return item;
     });
+    return {
+      data: result,
+      excellent: excellentCount,
+      lastExcellent: lastPerfect,
+    };
   }, [mode, dpi, currentPresetPPI, effectiveW, effectiveH, sizes]);
 
-  const excellent = data.filter((d) => d.status === "perfect").length;
-  const lastExcellent = [...data].reverse().find((d) => d.status === "perfect");
   const activeDpi = mode === "print" ? dpi : currentPresetPPI;
+
+  const handleDimensionsChange = useCallback((w: string, h: string) => {
+    setPixelWStr(w);
+    setPixelHStr(h);
+  }, []);
+
+  const handleAspectRatioReset = useCallback(() => setAspectRatio("nocrop"), []);
+
+  const handleSwap = useCallback(() => {
+    setPixelWStr(pixelHStr);
+    setPixelHStr(pixelWStr);
+  }, [pixelWStr, pixelHStr]);
 
   return (
     <>
       <CalculatorHeader
         mode={mode}
         onModeChange={setMode}
-        onDimensionsChange={(w, h) => {
-          setPixelWStr(w);
-          setPixelHStr(h);
-        }}
-        onAspectRatioReset={() => setAspectRatio("nocrop")}
+        onDimensionsChange={handleDimensionsChange}
+        onAspectRatioReset={handleAspectRatioReset}
       />
 
       <DimensionInputs
@@ -132,10 +149,7 @@ export default function PrintCalculator() {
         pixelHStr={pixelHStr}
         onPixelWChange={setPixelWStr}
         onPixelHChange={setPixelHStr}
-        onSwap={() => {
-          setPixelWStr(pixelHStr);
-          setPixelHStr(pixelWStr);
-        }}
+        onSwap={handleSwap}
       />
 
       {mode === "print" ? (
@@ -161,7 +175,7 @@ export default function PrintCalculator() {
         effectiveW={effectiveW}
         effectiveH={effectiveH}
         closestAspectRatio={closestAspectRatio}
-        isExactAspectMatch={!!isExactAspectMatch}
+        isExactAspectMatch={exactAspectMatch}
         onAspectRatioChange={setAspectRatio}
       />
 

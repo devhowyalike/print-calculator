@@ -10,8 +10,17 @@ type SizesTableProps = {
 
 export default function SizesTable({ mode, data }: SizesTableProps) {
   return (
-    <div className="overflow-hidden rounded-[14px] border border-[#1c1c21] bg-[#131316]">
-      <div className="grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] border-b border-[#1c1c21] px-4 sm:px-5 py-3 text-[11px] font-semibold uppercase tracking-[1px] text-zinc-600">
+    <div
+      className="overflow-hidden rounded-[14px] border"
+      style={{
+        borderColor: COLORS.bgCard,
+        backgroundColor: COLORS.bg,
+      }}
+    >
+      <div
+        className="grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] border-b px-4 sm:px-5 py-3 text-[11px] font-semibold uppercase tracking-[1px] text-zinc-600"
+        style={{ borderColor: COLORS.bgCard }}
+      >
         <div>Size</div>
         <div>Coverage</div>
         <div className="text-right">Your PPI</div>
@@ -42,7 +51,10 @@ export default function SizesTable({ mode, data }: SizesTableProps) {
               {item.displayName}
             </div>
             <div className="pr-3 sm:pr-5">
-              <div className="h-1.5 overflow-hidden rounded-full bg-[#1c1c21]">
+              <div
+                className="h-1.5 overflow-hidden rounded-full"
+                style={{ backgroundColor: COLORS.bgCard }}
+              >
                 <div
                   className="h-full rounded-full opacity-70 transition-[width] duration-400 ease-out"
                   style={{

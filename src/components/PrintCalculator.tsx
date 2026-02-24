@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { ArrowLeftRight } from "lucide-react";
 import type { Status } from "../lib/calculator";
+import { PPI_OPTIONS, getPPIDescription, COLORS } from "../lib/constants";
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
@@ -215,7 +216,7 @@ export default function PrintCalculator() {
               Target PPI
             </span>
             <div className="flex gap-1.5">
-              {([150, 200, 300] as const).map((val) => (
+              {PPI_OPTIONS.map((val) => (
                 <button
                   key={val}
                   onClick={() => setDpi(val)}
@@ -231,11 +232,7 @@ export default function PrintCalculator() {
             </div>
             <span className="hidden sm:block flex-1" />
             <span className="text-sm text-white">
-              {dpi <= 150
-                ? "Standard \u2014 good across the room"
-                : dpi <= 200
-                  ? "High quality \u2014 good at arm's length"
-                  : "Maximum \u2014 good handheld"}
+              {getPPIDescription(dpi)}
             </span>
           </>
         ) : (
@@ -415,7 +412,7 @@ export default function PrintCalculator() {
               style={{
                 background: sc.bg,
                 borderBottom:
-                  i < data.length - 1 ? "1px solid #1a1a1f" : "none",
+                  i < data.length - 1 ? `1px solid ${COLORS.border}` : "none",
               }}
             >
               <div className="font-mono text-sm font-semibold text-zinc-200">
@@ -453,12 +450,12 @@ export default function PrintCalculator() {
               {/* Desktop: Min PPI */}
               <div
                 className="hidden sm:block text-right font-mono text-[13px] font-medium"
-                style={{
-                  color:
-                    item.effectiveDPI >= item.viewingPPI
-                      ? "#38bdf8"
-                      : "#71717a",
-                }}
+style={{
+                    color:
+                      item.effectiveDPI >= item.viewingPPI
+                        ? COLORS.highlight
+                        : COLORS.muted,
+                  }}
               >
                 {item.viewingPPI}
               </div>

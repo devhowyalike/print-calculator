@@ -177,8 +177,8 @@ export const STATUS_CONFIG = {
 /** Returns Tailwind classes for a toggle button based on selection state. */
 export function toggleButtonClass(isSelected: boolean): string {
   return isSelected
-    ? "border border-zinc-700 bg-app-card text-zinc-200"
-    : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400";
+    ? "border bg-gradient-to-b from-white/[0.09] to-white/[0.04] border-white/[0.1] text-zinc-100 shadow-[0_0_8px_rgba(255,255,255,0.04)]"
+    : "border border-transparent text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]";
 }
 
 // ── Print utils (formatting) ─────────────────────────────────────────────────

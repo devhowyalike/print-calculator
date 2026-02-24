@@ -37,17 +37,17 @@ export default function CalculatorHeader({
     <div className="mb-5">
       <div className="mb-1.5 flex items-center gap-2.5">
         <span className="text-sm">🖨️</span>
-        <h1 className="font-mono text-3xl uppercase tracking-[1.5px] text-zinc-500">
+        <h1 className="font-mono text-3xl uppercase tracking-[1.5px] bg-linear-to-r from-zinc-200 to-zinc-500 bg-clip-text text-transparent">
           Pixel to Print Calculator
         </h1>
       </div>
 
       <h2 className="mt-1 mb-4 text-xl font-normal text-white">
-        A tool for photographers, designers and artists to determine which
-        print sizes their digital images can support at a given quality level.
+        A tool for photographers, designers and artists to determine which print
+        sizes their digital images can support at a given quality level.
       </h2>
 
-      <div className="mt-5 mb-1 flex items-center gap-1 rounded-xl border border-zinc-800 bg-app-bg p-1 w-fit">
+      <div className="mt-5 mb-1 flex items-center gap-1 rounded-2xl border border-white/[0.06] bg-app-card-surface p-1 w-fit shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
         {(["print", "billboard"] as const).map((m) => (
           <button
             key={m}

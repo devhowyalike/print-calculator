@@ -91,6 +91,7 @@ code {
   --font-mono: 'JetBrains Mono', monospace;
   --color-app-bg: #131316;
   --color-app-card: #1c1c21;
+  --color-app-card-surface: #15151a;
   --color-app-card-dark: #0e0e10;
   --color-app-border: #1a1a1f;
   --color-app-hover: #25252b;

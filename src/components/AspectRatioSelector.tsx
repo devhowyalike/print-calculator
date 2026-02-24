@@ -1,3 +1,10 @@
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "./ui/collapsible";
 import {
   ASPECT_RATIOS,
   getAspectRatioLabel,
@@ -17,7 +24,7 @@ type AspectRatioSelectorProps = {
   onAspectRatioChange: (value: AspectRatioValue) => void;
 };
 
-export default function AspectRatioSelector({
+function AspectRatioButtons({
   pixelW,
   pixelH,
   aspectRatio,
@@ -28,10 +35,7 @@ export default function AspectRatioSelector({
   onAspectRatioChange,
 }: AspectRatioSelectorProps) {
   return (
-    <div className="mb-7 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-app-bg px-[18px] py-3.5">
-      <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
-        Aspect Ratio
-      </span>
+    <>
       <div className="flex flex-wrap gap-1.5">
         {ASPECT_RATIOS.map((ar) => {
           const isPortrait = pixelH > pixelW;
@@ -61,9 +65,7 @@ export default function AspectRatioSelector({
               className={`cursor-pointer rounded-lg px-[14px] py-[7px] text-sm font-medium transition-all duration-200 ${toggleButtonClass(isSelected)}`}
             >
               <span
-                className={
-                  isClosest ? "border-b-2 border-blue-500 pb-0.5" : ""
-                }
+                className={isClosest ? "border-b-2 border-blue-500 pb-0.5" : ""}
               >
                 {label}
               </span>
@@ -87,6 +89,41 @@ export default function AspectRatioSelector({
             )}
         </span>
       )}
+    </>
+  );
+}
+
+export default function AspectRatioSelector(props: AspectRatioSelectorProps) {
+  const [open, setOpen] = useState(false);
+
+  const currentLabel =
+    props.aspectRatio === "nocrop"
+      ? "No Crop"
+      : Array.isArray(props.aspectRatio)
+        ? getAspectRatioLabel(
+            props.aspectRatio as readonly [number, number],
+            props.pixelH > props.pixelW,
+          )
+        : "";
+
+  return (
+    <div className="mb-7 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+      <Collapsible open={open} onOpenChange={setOpen}>
+        <CollapsibleTrigger className="flex w-full items-center justify-between cursor-pointer">
+          <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+            Aspect Ratio
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-zinc-400">{currentLabel}</span>
+            <ChevronDown
+              className={`h-4 w-4 text-zinc-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            />
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-3 flex flex-col gap-3">
+          <AspectRatioButtons {...props} />
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }

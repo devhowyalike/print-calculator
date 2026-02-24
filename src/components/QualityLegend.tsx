@@ -6,7 +6,7 @@ type QualityLegendProps = {
 
 export default function QualityLegend({ activeDpi }: QualityLegendProps) {
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
+    <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
       {(
         Object.entries(STATUS_CONFIG) as [
           Status,

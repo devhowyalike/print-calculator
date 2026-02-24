@@ -20,16 +20,14 @@ type PPIOrViewingSelectorProps =
       currentPresetPPI: number;
     };
 
-export default function PPIOrViewingSelector(
-  props: PPIOrViewingSelectorProps,
-) {
+export default function PPIOrViewingSelector(props: PPIOrViewingSelectorProps) {
   if (props.mode === "print") {
     return (
-      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-app-bg px-[18px] py-3.5">
-        <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
+      <div className="mb-4 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-x-4 sm:gap-y-2 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+        <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
           Target PPI
         </span>
-        <div className="flex gap-1.5">
+        <div className="flex items-center gap-1.5">
           {PPI_OPTIONS.map((val) => (
             <button
               key={val}
@@ -41,17 +39,19 @@ export default function PPIOrViewingSelector(
           ))}
         </div>
         <span className="hidden sm:block flex-1" />
-        <span className="text-sm text-white">{getPPIDescription(props.dpi)}</span>
+        <span className="text-sm text-white">
+          {getPPIDescription(props.dpi)}
+        </span>
       </div>
     );
   }
 
   return (
-    <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-app-bg px-[18px] py-3.5">
-      <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
+    <div className="mb-4 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-x-4 sm:gap-y-2 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+      <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
         Viewing Distance
       </span>
-      <div className="flex gap-1.5">
+      <div className="flex flex-wrap items-center gap-1.5">
         {VIEWING_PRESETS.map((preset) => (
           <button
             key={preset.label}

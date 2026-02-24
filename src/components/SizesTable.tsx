@@ -7,8 +7,8 @@ type SizesTableProps = {
 
 export default function SizesTable({ mode, data }: SizesTableProps) {
   return (
-    <div className="overflow-hidden rounded-[14px] border border-app-card bg-app-bg">
-      <div className="grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] border-b border-app-card px-4 sm:px-5 py-3 text-[11px] font-semibold uppercase tracking-[1px] text-zinc-600">
+    <div className="overflow-hidden rounded-2xl border border-white/6 bg-app-card-surface shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+      <div className="grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] border-b border-white/4 px-4 sm:px-5 py-3 text-[11px] font-semibold uppercase tracking-[1px] text-zinc-600">
         <div>Size</div>
         <div>Coverage</div>
         <div className="text-right">Your PPI</div>
@@ -28,7 +28,7 @@ export default function SizesTable({ mode, data }: SizesTableProps) {
         return (
           <div
             key={item.name}
-            className={`grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] items-center px-4 sm:px-5 py-[11px] transition-colors duration-300 ${i < data.length - 1 ? "border-b border-app-border" : ""}`}
+            className={`grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] items-center px-4 sm:px-5 py-[11px] transition-colors duration-300 ${i < data.length - 1 ? "border-b border-white/[0.04]" : ""}`}
             style={{ background: sc.bg }}
           >
             <div className="font-mono text-sm font-semibold text-zinc-200">

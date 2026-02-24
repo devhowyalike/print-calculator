@@ -47,7 +47,7 @@ export default function CalculatorHeader({
         sizes their digital images can support at a given quality level.
       </h2>
 
-      <div className="mt-5 mb-1 flex items-center gap-1 rounded-2xl border border-white/[0.06] bg-app-card-surface p-1 w-fit shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+      <div className="mt-5 mb-1 flex items-center gap-1 rounded-2xl border border-white/6 bg-app-card-surface p-1 w-fit shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
         {(["print", "billboard"] as const).map((m) => (
           <button
             key={m}

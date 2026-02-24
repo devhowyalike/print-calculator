@@ -27,7 +27,7 @@ export default function SummaryCards({
           </span>
         </div>
       </div>
-      <div className="min-w-[160px] flex-1 rounded-2xl border border-white/[0.06] bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+      <div className="min-w-[160px] flex-1 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
         <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
           Largest excellent
         </div>
@@ -35,7 +35,7 @@ export default function SummaryCards({
           {lastExcellent ? lastExcellent.displayName : "—"}
         </div>
       </div>
-      <div className="min-w-[160px] flex-1 rounded-2xl border border-white/[0.06] bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+      <div className="min-w-[160px] flex-1 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
         <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
           PPI at largest usable size
         </div>

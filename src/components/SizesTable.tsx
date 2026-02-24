@@ -28,7 +28,7 @@ export default function SizesTable({ mode, data }: SizesTableProps) {
         return (
           <div
             key={item.name}
-            className={`grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] items-center px-4 sm:px-5 py-[11px] transition-colors duration-300 ${i < data.length - 1 ? "border-b border-white/[0.04]" : ""}`}
+            className={`grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] items-center px-4 sm:px-5 py-[11px] transition-colors duration-300 ${i < data.length - 1 ? "border-b border-white/4" : ""}`}
             style={{ background: sc.bg }}
           >
             <div className="font-mono text-sm font-semibold text-zinc-200">

@@ -10,7 +10,7 @@ export default function App() {
         <PPIExplainer />
 
         {/* Resources */}
-        <div className="mt-12 rounded-2xl border border-white/[0.06] bg-app-card-surface px-6 py-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+        <div className="mt-12 rounded-2xl border border-white/6 bg-app-card-surface px-6 py-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
           <div className="mb-4 flex items-center gap-2.5">
             <div className="h-2 w-2 rounded-full bg-zinc-500 shadow-[0_0_6px_rgba(161,161,170,0.3)]" />
             <span className="font-mono text-xs uppercase tracking-[1.5px] text-zinc-500">

@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { ArrowLeftRight } from "lucide-react";
 import type { Status } from "../lib/calculator";
 import {
   DEFAULT_WIDTH,
@@ -7,11 +8,18 @@ import {
   BILLBOARD_DEFAULT_HEIGHT,
   COMMON_SIZES,
   BILLBOARD_SIZES,
+  SQUARE_PRINT_SIZES,
+  SQUARE_BILLBOARD_SIZES,
   VIEWING_PRESETS,
+  ASPECT_RATIOS,
   STATUS_CONFIG,
   getStatus,
   getEffectiveDPI,
   getDisplayDimensions,
+  getCroppedDimensions,
+  inferAspectRatioFromPixels,
+  getAspectRatioLabel,
+  sizeMatchesAspectRatio,
   getViewingPPI,
   getViewingPPIFromDistance,
 } from "../lib/calculator";
@@ -24,11 +32,42 @@ export default function PrintCalculator() {
   const [viewingDistanceFt, setViewingDistanceFt] = useState(5);
   const [pixelWStr, setPixelWStr] = useState(String(DEFAULT_WIDTH));
   const [pixelHStr, setPixelHStr] = useState(String(DEFAULT_HEIGHT));
+  const [aspectRatio, setAspectRatio] =
+    useState<(typeof ASPECT_RATIOS)[number]["value"]>("nocrop");
 
   const pixelW = parseInt(pixelWStr) || 0;
   const pixelH = parseInt(pixelHStr) || 0;
 
-  const sizes = mode === "print" ? COMMON_SIZES : BILLBOARD_SIZES;
+  const { w: effectiveW, h: effectiveH } = getCroppedDimensions(
+    pixelW,
+    pixelH,
+    aspectRatio,
+  );
+
+  const targetRatio =
+    effectiveW > 0 && effectiveH > 0 ? effectiveW / effectiveH : 0;
+  const closestAspectRatio =
+    pixelW > 0 && pixelH > 0
+      ? inferAspectRatioFromPixels(pixelW, pixelH)
+      : null;
+  const isExactAspectMatch =
+    closestAspectRatio &&
+    pixelW > 0 &&
+    pixelH > 0 &&
+    (() => {
+      const ratio = Math.max(pixelW, pixelH) / Math.min(pixelW, pixelH);
+      const [rW, rH] = closestAspectRatio;
+      const presetRatio = Math.max(rW, rH) / Math.min(rW, rH);
+      return Math.abs(ratio - presetRatio) < 0.0001;
+    })();
+  const baseSizes = mode === "print" ? COMMON_SIZES : BILLBOARD_SIZES;
+  const squareSizes =
+    mode === "print" ? SQUARE_PRINT_SIZES : SQUARE_BILLBOARD_SIZES;
+  const allSizes = [...squareSizes, ...baseSizes];
+  const sizes =
+    targetRatio > 0
+      ? allSizes.filter((s) => sizeMatchesAspectRatio(s, targetRatio))
+      : allSizes;
 
   const currentPreset = VIEWING_PRESETS.find(
     (p) => p.distanceFt === viewingDistanceFt,
@@ -38,8 +77,8 @@ export default function PrintCalculator() {
     Math.ceil(getViewingPPIFromDistance(viewingDistanceFt));
 
   const data = useMemo(() => {
-    const w = pixelW;
-    const h = pixelH;
+    const w = effectiveW;
+    const h = effectiveH;
     return sizes.map((size) => {
       const display = getDisplayDimensions(size, w, h);
       const effectiveDPI = Math.round(getEffectiveDPI(size, w, h));
@@ -63,7 +102,7 @@ export default function PrintCalculator() {
         targetDpi,
       };
     });
-  }, [mode, dpi, currentPresetPPI, pixelW, pixelH, sizes]);
+  }, [mode, dpi, currentPresetPPI, effectiveW, effectiveH, sizes]);
 
   const excellent = data.filter((d) => d.status === "perfect").length;
   const lastExcellent = [...data].reverse().find((d) => d.status === "perfect");
@@ -92,6 +131,7 @@ export default function PrintCalculator() {
               key={m}
               onClick={() => {
                 setMode(m);
+                setAspectRatio("nocrop");
                 if (m === "print") {
                   setPixelWStr(String(DEFAULT_WIDTH));
                   setPixelHStr(String(DEFAULT_HEIGHT));
@@ -144,11 +184,94 @@ export default function PrintCalculator() {
             className="w-[80px] sm:w-[90px] rounded-lg border border-zinc-700 bg-[#1c1c21] px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none focus:border-zinc-500"
           />
           <span className="text-xs text-zinc-700">px</span>
+          <button
+            type="button"
+            onClick={() => {
+              setPixelWStr(pixelHStr);
+              setPixelHStr(pixelWStr);
+              const inferred = inferAspectRatioFromPixels(pixelH, pixelW);
+              if (inferred)
+                setAspectRatio(
+                  inferred as (typeof ASPECT_RATIOS)[number]["value"],
+                );
+            }}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-[#1c1c21] text-zinc-500 transition-colors hover:border-zinc-600 hover:bg-[#25252b] hover:text-zinc-300"
+            title="Swap dimensions"
+            aria-label="Swap width and height"
+          >
+            <ArrowLeftRight className="h-4 w-4" />
+          </button>
         </div>
         <div className="flex-1" />
         <span className="font-mono text-xs sm:text-sm text-white whitespace-nowrap">
           {((pixelW * pixelH) / 1000000).toFixed(1)} MP
         </span>
+      </div>
+
+      {/* Aspect ratio crop */}
+      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-zinc-800 bg-[#131316] px-[18px] py-3.5">
+        <span className="whitespace-nowrap text-[13px] font-medium text-zinc-500">
+          Aspect Ratio
+        </span>
+        <div className="flex flex-wrap gap-1.5">
+          {ASPECT_RATIOS.map((ar) => {
+            const isPortrait = pixelH > pixelW;
+            const label = Array.isArray(ar.value)
+              ? getAspectRatioLabel(
+                  ar.value as readonly [number, number],
+                  isPortrait,
+                )
+              : ar.label;
+            const activeRatio = Array.isArray(aspectRatio) ? aspectRatio : null;
+            const isSelected =
+              ar.value === "nocrop"
+                ? aspectRatio === "nocrop"
+                : Array.isArray(ar.value) && activeRatio
+                  ? ar.value[0] === activeRatio[0] &&
+                    ar.value[1] === activeRatio[1]
+                  : aspectRatio === ar.value;
+            const isClosest =
+              closestAspectRatio &&
+              Array.isArray(ar.value) &&
+              ar.value[0] === closestAspectRatio[0] &&
+              ar.value[1] === closestAspectRatio[1];
+            return (
+              <button
+                key={ar.label}
+                onClick={() => setAspectRatio(ar.value)}
+                className={`cursor-pointer rounded-lg px-[14px] py-[7px] text-sm font-medium transition-all duration-200 ${
+                  isSelected
+                    ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"
+                    : "border border-transparent bg-transparent text-zinc-600 hover:text-zinc-400"
+                }`}
+              >
+                <span
+                  className={
+                    isClosest ? "border-b-2 border-blue-500 pb-0.5" : ""
+                  }
+                >
+                  {label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {aspectRatio !== "nocrop" && aspectRatio && (
+          <span className="text-sm text-zinc-500 flex items-center gap-1.5">
+            Using {effectiveW.toLocaleString()}×{effectiveH.toLocaleString()} px
+            {closestAspectRatio &&
+              Array.isArray(aspectRatio) &&
+              aspectRatio[0] === closestAspectRatio[0] &&
+              aspectRatio[1] === closestAspectRatio[1] && (
+                <>
+                  <span className="inline-block w-4 border-b-2 border-blue-500" />
+                  {isExactAspectMatch
+                    ? "Your aspect ratio"
+                    : "Closest match to your image"}
+                </>
+              )}
+          </span>
+        )}
       </div>
 
       {/* PPI Selector / Viewing Distance */}
@@ -392,7 +515,7 @@ export default function PrintCalculator() {
         <li>Both landscape and portrait orientations are considered.</li>
         <li>
           <span className="text-zinc-200">"Your PPI"</span> shows the effective
-          resolution your {pixelW}x{pixelH} file achieves at each{" "}
+          resolution your {effectiveW}×{effectiveH} file achieves at each{" "}
           {mode === "billboard" ? "billboard" : "print"} size.
         </li>
         {mode === "print" ? (

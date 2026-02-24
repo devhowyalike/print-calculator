@@ -36,6 +36,7 @@ function AspectRatioButtons({
 }: AspectRatioSelectorProps) {
   return (
     <>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
       <div className="flex flex-wrap gap-1.5">
         {ASPECT_RATIOS.map((ar) => {
           const isPortrait = pixelH > pixelW;
@@ -74,21 +75,23 @@ function AspectRatioButtons({
         })}
       </div>
       {aspectRatio !== "nocrop" && aspectRatio && (
-        <span className="text-sm text-white flex items-center gap-1.5 flex-wrap">
+        <span className="text-sm text-white shrink-0">
           Using {effectiveW.toLocaleString()}×{effectiveH.toLocaleString()} px
-          {closestAspectRatio &&
-            Array.isArray(aspectRatio) &&
-            aspectRatio[0] === closestAspectRatio[0] &&
-            aspectRatio[1] === closestAspectRatio[1] && (
-              <span className="inline-flex items-center gap-1.5 max-sm:basis-full">
-                <span className="inline-block w-4 border-b-2 border-blue-500" />
-                {isExactAspectMatch
-                  ? "Your aspect ratio"
-                  : "Closest match to your image"}
-              </span>
-            )}
         </span>
       )}
+      </div>
+      {aspectRatio !== "nocrop" && aspectRatio &&
+        closestAspectRatio &&
+        Array.isArray(aspectRatio) &&
+        aspectRatio[0] === closestAspectRatio[0] &&
+        aspectRatio[1] === closestAspectRatio[1] && (
+          <span className="text-sm text-zinc-400 inline-flex items-center gap-1.5">
+            <span className="inline-block w-4 border-b-2 border-blue-500" />
+            {isExactAspectMatch
+              ? "Your aspect ratio"
+              : "Closest match to your image"}
+          </span>
+        )}
     </>
   );
 }

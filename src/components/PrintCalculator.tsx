@@ -11,6 +11,7 @@ import {
   STATUS_CONFIG,
   getStatus,
   getEffectiveDPI,
+  getDisplayDimensions,
   getViewingPPI,
   getViewingPPIFromDistance,
 } from "../lib/calculator";
@@ -40,6 +41,7 @@ export default function PrintCalculator() {
     const w = pixelW;
     const h = pixelH;
     return sizes.map((size) => {
+      const display = getDisplayDimensions(size, w, h);
       const effectiveDPI = Math.round(getEffectiveDPI(size, w, h));
       const viewingPPI =
         mode === "print" ? getViewingPPI(size) : currentPresetPPI;
@@ -47,8 +49,13 @@ export default function PrintCalculator() {
       const status = getStatus(size, targetDpi, w, h);
       const fineForDistance =
         effectiveDPI < targetDpi && effectiveDPI >= viewingPPI;
+      const displayName =
+        mode === "print"
+          ? `${display.w % 1 ? display.w : Math.round(display.w)}×${display.h % 1 ? display.h : Math.round(display.h)}"`
+          : `${Math.round(display.w / 12)}×${Math.round(display.h / 12)} ft`;
       return {
         ...size,
+        displayName,
         status,
         effectiveDPI,
         viewingPPI,
@@ -247,7 +254,7 @@ export default function PrintCalculator() {
             Largest excellent
           </div>
           <div className="text-2xl font-bold text-zinc-200">
-            {lastExcellent ? lastExcellent.name : "—"}
+            {lastExcellent ? lastExcellent.displayName : "—"}
           </div>
         </div>
         <div className="min-w-[160px] flex-1 rounded-[10px] border border-[#1c1c21] bg-[#131316] px-[18px] py-3.5">
@@ -290,7 +297,7 @@ export default function PrintCalculator() {
               }}
             >
               <div className="font-mono text-sm font-semibold text-zinc-200">
-                {item.name}
+                {item.displayName}
               </div>
               <div className="pr-3 sm:pr-5">
                 <div className="h-1.5 overflow-hidden rounded-full bg-[#1c1c21]">

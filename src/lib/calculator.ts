@@ -115,6 +115,23 @@ export function getEffectiveDPI(
   return Math.max(landscape, portrait);
 }
 
+/** Returns the display dimensions in the orientation that fits the user's pixels best. */
+export function getDisplayDimensions(
+  size: { w: number; h: number },
+  pw: number,
+  ph: number,
+): { w: number; h: number } {
+  const dpiLandW = pw / size.w;
+  const dpiLandH = ph / size.h;
+  const dpiPortW = pw / size.h;
+  const dpiPortH = ph / size.w;
+  const landscape = Math.min(dpiLandW, dpiLandH);
+  const portrait = Math.min(dpiPortW, dpiPortH);
+  return portrait >= landscape
+    ? { w: size.h, h: size.w }
+    : { w: size.w, h: size.h };
+}
+
 /**
  * Minimum PPI needed based on typical viewing distance for a print size.
  * Uses 1-arcminute visual acuity: threshold ≈ 3438 / distance_inches.

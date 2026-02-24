@@ -74,18 +74,18 @@ function AspectRatioButtons({
         })}
       </div>
       {aspectRatio !== "nocrop" && aspectRatio && (
-        <span className="text-sm text-zinc-500 flex items-center gap-1.5">
+        <span className="text-sm text-white flex items-center gap-1.5 flex-wrap">
           Using {effectiveW.toLocaleString()}×{effectiveH.toLocaleString()} px
           {closestAspectRatio &&
             Array.isArray(aspectRatio) &&
             aspectRatio[0] === closestAspectRatio[0] &&
             aspectRatio[1] === closestAspectRatio[1] && (
-              <>
+              <span className="inline-flex items-center gap-1.5 max-sm:basis-full">
                 <span className="inline-block w-4 border-b-2 border-blue-500" />
                 {isExactAspectMatch
                   ? "Your aspect ratio"
                   : "Closest match to your image"}
-              </>
+              </span>
             )}
         </span>
       )}

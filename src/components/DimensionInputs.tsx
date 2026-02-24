@@ -28,22 +28,16 @@ export default function DimensionInputs({
         Pixels
       </span>
       <div className="flex items-center gap-2">
-        <input
-          type="number"
-          value={pixelWStr}
-          onChange={(e) => onPixelWChange(e.target.value)}
-          onBlur={(e) => handleBlur(e.target.value, onPixelWChange)}
-          className="w-[80px] sm:w-[90px] rounded-lg border border-white/8 bg-app-card px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] focus:border-white/15 focus:ring-1 focus:ring-white/8"
-        />
-        <span className="text-base font-light text-zinc-700">x</span>
-        <input
-          type="number"
-          value={pixelHStr}
-          onChange={(e) => onPixelHChange(e.target.value)}
-          onBlur={(e) => handleBlur(e.target.value, onPixelHChange)}
-          className="w-[80px] sm:w-[90px] rounded-lg border border-white/8 bg-app-card px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] focus:border-white/15 focus:ring-1 focus:ring-white/8"
-        />
-        <span className="text-xs text-zinc-700">px</span>
+        <div className="flex items-center">
+          <span className="flex items-center justify-center rounded-l-lg border border-r-0 border-white/8 bg-app-card px-2 py-[7px] text-sm font-medium text-zinc-500">W</span>
+          <input
+            type="number"
+            value={pixelWStr}
+            onChange={(e) => onPixelWChange(e.target.value)}
+            onBlur={(e) => handleBlur(e.target.value, onPixelWChange)}
+            className="w-[80px] sm:w-[90px] rounded-r-lg border border-l-0 border-white/8 bg-app-card px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] focus:border-white/15 focus:ring-1 focus:ring-white/8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+          />
+        </div>
         <button
           type="button"
           onClick={onSwap}
@@ -53,6 +47,17 @@ export default function DimensionInputs({
         >
           <ArrowLeftRight className="h-4 w-4" />
         </button>
+        <div className="flex items-center">
+          <span className="flex items-center justify-center rounded-l-lg border border-r-0 border-white/8 bg-app-card px-2 py-[7px] text-sm font-medium text-zinc-500">H</span>
+          <input
+            type="number"
+            value={pixelHStr}
+            onChange={(e) => onPixelHChange(e.target.value)}
+            onBlur={(e) => handleBlur(e.target.value, onPixelHChange)}
+            className="w-[80px] sm:w-[90px] rounded-r-lg border border-l-0 border-white/8 bg-app-card px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] focus:border-white/15 focus:ring-1 focus:ring-white/8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+          />
+        </div>
+        <span className="text-xs text-white">px</span>
       </div>
       <span className="sm:flex-1" />
       <span className="font-mono text-xs sm:text-sm text-white whitespace-nowrap">

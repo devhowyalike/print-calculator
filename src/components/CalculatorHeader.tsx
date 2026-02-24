@@ -37,7 +37,7 @@ export default function CalculatorHeader({
     <div className="mb-5">
       <div className="mb-1.5 flex items-center gap-2.5">
         <span className="text-sm">🖨️</span>
-        <h1 className="font-mono text-3xl uppercase tracking-[1.5px] bg-linear-to-r from-zinc-200 to-zinc-500 bg-clip-text text-transparent">
+        <h1 className="font-mono text-3xl uppercase tracking-[1.5px] text-zinc-200">
           Pixel to Print Calculator
         </h1>
       </div>

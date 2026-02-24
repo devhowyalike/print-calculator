@@ -5,11 +5,23 @@ export const BILLBOARD_DEFAULT_WIDTH = 14400;
 export const BILLBOARD_DEFAULT_HEIGHT = 7200;
 
 export const BILLBOARD_SIZES = [
+  { name: '5x11 ft', w: 60, h: 132 },
   { name: '6x12 ft', w: 72, h: 144 },
   { name: '8x24 ft', w: 96, h: 288 },
+  { name: '10x20 ft', w: 120, h: 240 },
+  { name: '10x22 ft', w: 120, h: 264 },
+  { name: '11x24 ft', w: 132, h: 288 },
+  { name: '12x24 ft', w: 144, h: 288 },
   { name: '12x25 ft', w: 144, h: 300 },
+  { name: '10x36 ft', w: 120, h: 432 },
+  { name: '18x24 ft', w: 216, h: 288 },
+  { name: '12x40 ft', w: 144, h: 480 },
   { name: '14x48 ft', w: 168, h: 576 },
   { name: '20x40 ft', w: 240, h: 480 },
+  { name: '16x60 ft', w: 192, h: 720 },
+  { name: '24x48 ft', w: 288, h: 576 },
+  { name: '20x60 ft', w: 240, h: 720 },
+  { name: '30x60 ft', w: 360, h: 720 },
 ];
 
 export const VIEWING_PRESETS = [

@@ -1,6 +1,9 @@
 export const DEFAULT_WIDTH = 5592;
 export const DEFAULT_HEIGHT = 4096;
 
+export const BILLBOARD_DEFAULT_WIDTH = 14400;
+export const BILLBOARD_DEFAULT_HEIGHT = 7200;
+
 export const BILLBOARD_SIZES = [
   { name: '6x12 ft', w: 72, h: 144 },
   { name: '8x24 ft', w: 96, h: 288 },

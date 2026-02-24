@@ -3,6 +3,8 @@ import type { Status } from "../lib/calculator";
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
+  BILLBOARD_DEFAULT_WIDTH,
+  BILLBOARD_DEFAULT_HEIGHT,
   COMMON_SIZES,
   BILLBOARD_SIZES,
   VIEWING_PRESETS,
@@ -81,7 +83,16 @@ export default function PrintCalculator() {
           {(["print", "billboard"] as const).map((m) => (
             <button
               key={m}
-              onClick={() => setMode(m)}
+              onClick={() => {
+                setMode(m);
+                if (m === "print") {
+                  setPixelWStr(String(DEFAULT_WIDTH));
+                  setPixelHStr(String(DEFAULT_HEIGHT));
+                } else {
+                  setPixelWStr(String(BILLBOARD_DEFAULT_WIDTH));
+                  setPixelHStr(String(BILLBOARD_DEFAULT_HEIGHT));
+                }
+              }}
               className={`cursor-pointer rounded-lg px-4 py-[7px] text-sm font-medium transition-all duration-200 ${
                 mode === m
                   ? "border border-zinc-700 bg-[#1c1c21] text-zinc-200"

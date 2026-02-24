@@ -1,0 +1,75 @@
+import {
+  PPI_OPTIONS,
+  getPPIDescription,
+  VIEWING_PRESETS,
+  type ViewingPreset,
+  toggleButtonClass,
+} from "../lib/calculator";
+
+type PPIOrViewingSelectorProps =
+  | {
+      mode: "print";
+      dpi: number;
+      onDpiChange: (dpi: number) => void;
+    }
+  | {
+      mode: "billboard";
+      viewingDistanceFt: number;
+      onViewingDistanceChange: (ft: number) => void;
+      currentPreset: ViewingPreset | undefined;
+      currentPresetPPI: number;
+    };
+
+export default function PPIOrViewingSelector(props: PPIOrViewingSelectorProps) {
+  if (props.mode === "print") {
+    return (
+      <div className="mb-4 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-x-4 sm:gap-y-2 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+        <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+          Target PPI
+        </span>
+        <div className="flex items-center gap-1.5">
+          {PPI_OPTIONS.map((val) => (
+            <button
+              key={val}
+              onClick={() => props.onDpiChange(val)}
+              className={`cursor-pointer rounded-lg px-[18px] py-[7px] font-mono text-sm font-medium transition-all duration-200 ${toggleButtonClass(props.dpi === val)}`}
+            >
+              {val}
+            </button>
+          ))}
+        </div>
+        <span className="hidden sm:block flex-1" />
+        <span className="text-sm text-white">
+          {getPPIDescription(props.dpi)}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-4 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-x-4 sm:gap-y-2 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+      <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+        Viewing Distance
+      </span>
+      <div className="flex flex-wrap items-center gap-1.5">
+        {VIEWING_PRESETS.map((preset) => (
+          <button
+            key={preset.label}
+            onClick={() => props.onViewingDistanceChange(preset.distanceFt)}
+            className={`cursor-pointer rounded-lg px-[18px] py-[7px] text-sm font-medium transition-all duration-200 ${toggleButtonClass(props.viewingDistanceFt === preset.distanceFt)}`}
+          >
+            {preset.label}
+          </button>
+        ))}
+      </div>
+      <span className="hidden sm:block flex-1" />
+      <span className="text-sm text-white">
+        {props.currentPreset?.description ?? ""} (~{props.viewingDistanceFt} ft)
+        {" \u2014 "}
+        <span className="font-mono text-zinc-400">
+          {props.currentPresetPPI} PPI target
+        </span>
+      </span>
+    </div>
+  );
+}

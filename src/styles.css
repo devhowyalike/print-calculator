@@ -89,6 +89,14 @@ code {
 @theme inline {
   --font-sans: 'DM Sans', 'Helvetica Neue', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --color-app-bg: #131316;
+  --color-app-card: #1c1c21;
+  --color-app-card-surface: #15151a;
+  --color-app-card-dark: #0e0e10;
+  --color-app-border: #1a1a1f;
+  --color-app-hover: #25252b;
+  --color-app-highlight: #38bdf8;
+  --color-app-muted: #71717a;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

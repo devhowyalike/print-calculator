@@ -241,14 +241,10 @@ export default function PrintCalculator() {
         </div>
         <div className="min-w-[160px] flex-1 rounded-[10px] border border-[#1c1c21] bg-[#131316] px-[18px] py-3.5">
           <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
-            {mode === "print" ? "Max PPI at largest" : "Min PPI required"}
+            PPI at largest usable size
           </div>
           <div className="font-mono text-2xl font-bold text-zinc-400">
-            {mode === "print"
-              ? lastExcellent
-                ? lastExcellent.effectiveDPI
-                : "—"
-              : currentPresetPPI}
+            {lastExcellent ? lastExcellent.effectiveDPI : "—"}
           </div>
         </div>
       </div>

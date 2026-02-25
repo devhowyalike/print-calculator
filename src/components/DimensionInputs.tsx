@@ -95,7 +95,7 @@ export default function DimensionInputs({
         <span className="text-xs text-white">px</span>
       </div>
       <span className="sm:flex-1" />
-      <span className="font-mono text-xs sm:text-sm text-white whitespace-nowrap">
+      <span className="hidden sm:inline font-mono text-xs sm:text-sm text-white whitespace-nowrap">
         {megapixels} MP
       </span>
     </div>

@@ -7,7 +7,7 @@ type SizesTableProps = {
 
 export default function SizesTable({ mode, data }: SizesTableProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/6 bg-app-card-surface shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+    <div className="rounded-2xl border border-white/6 bg-app-card-surface shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
       <div className="grid grid-cols-[70px_1fr_60px_60px] sm:grid-cols-[90px_1fr_80px_80px_80px] border-b border-white/4 px-4 sm:px-5 py-3 text-[11px] font-semibold uppercase tracking-[1px] text-zinc-600">
         <div>Size</div>
         <div>Coverage</div>

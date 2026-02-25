@@ -295,17 +295,15 @@ export function generateSizesForRatio(
   const suffix = mode === "print" ? '"' : " ft";
   const inFeet = mode === "billboard";
 
-  const round = (n: number) => Math.round(n * 100) / 100;
-
   return progression.map((longSide) => {
     let w: number;
     let h: number;
     if (targetRatio >= 1) {
       w = longSide;
-      h = round(longSide / targetRatio);
+      h = Math.round(longSide / targetRatio);
     } else {
       h = longSide;
-      w = round(longSide * targetRatio);
+      w = Math.round(longSide * targetRatio);
     }
     const name = `${formatSizeLabel(w, inFeet)}\u00d7${formatSizeLabel(h, inFeet)}${suffix}`;
     return { name, w, h };

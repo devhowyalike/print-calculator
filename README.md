@@ -35,6 +35,68 @@ npm run build
 npm run preview
 ```
 
+## 🧪 WebMCP (Experimental)
+
+This project implements the [W3C WebMCP draft spec](https://webmachinelearning.github.io/webmcp/) — a proposed browser API that lets web pages expose JavaScript functions as "tools" that AI agents can discover and call directly.
+
+### What it is
+
+WebMCP proposes a native browser API — `navigator.modelContext` — that works like a client-side MCP server. Instead of building a backend to serve tools over HTTP, a page registers them in JavaScript and the browser makes them available to any AI agent or assistive technology that has access to the tab.
+
+```js
+navigator.modelContext.provideContext({
+  tools: [
+    {
+      name: "calculatePrintQuality",
+      description:
+        "Calculate print quality for a given image resolution and size.",
+      inputSchema: {
+        /* JSON Schema */
+      },
+      execute: async (input, client) => {
+        /* ... */
+      },
+    },
+  ],
+});
+```
+
+Five tools are registered at page load in [`src/mcp.ts`](src/mcp.ts):
+
+| Tool                          | Description                                                     |
+| ----------------------------- | --------------------------------------------------------------- |
+| `calculatePrintQuality`       | Quality status + effective DPI for a given image and print size |
+| `getPrintSizeTable`           | Quality ratings across all common print sizes                   |
+| `getLargestGoodPrintSize`     | Largest achievable size at a given quality threshold            |
+| `calculateBillboardQuality`   | Large-format quality using viewing-distance PPI                 |
+| `calculateRequiredResolution` | Min pixel resolution needed to hit a size/DPI target            |
+
+### Current status
+
+`navigator.modelContext` is a **draft community group report** — no browser has implemented it yet. The tools are registered but silently inert in all current browsers.
+
+To test locally, a dev-only polyfill in [`src/webmcp-polyfill.ts`](src/webmcp-polyfill.ts) implements the API in-memory and exposes `window.__webmcp__` in the browser console:
+
+```js
+// List all registered tools
+__webmcp__.list();
+
+// Call a tool
+__webmcp__.call("getLargestGoodPrintSize", {
+  imageWidth: 4096,
+  imageHeight: 5120,
+});
+
+// Inspect a tool's JSON Schema
+__webmcp__.schema("calculatePrintQuality");
+```
+
+The polyfill is gated behind `import.meta.env.DEV` and is stripped from production builds.
+
+### Limitations
+
+Currently, `navigator.modelContext` is a same-tab, same-process API. Tools registered here are **not** network-accessible — a separate app or server cannot call them directly. For network-accessible tools, a standalone MCP server or REST API would be required. See the [WebMCP explainer](https://github.com/webmachinelearning/webmcp) for the full rationale and design goals.
+
 ## Tech Stack
 
 - [React](https://react.dev/)

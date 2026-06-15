@@ -25,9 +25,11 @@ The calculator has three modes: **Standard Print**, **Billboard / Large Format**
 
 ## Getting Started
 
+This project uses [pnpm](https://pnpm.io). Install it first if you don't have it (`npm i -g pnpm`), then:
+
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 The app runs at `http://localhost:3000`.
@@ -35,8 +37,8 @@ The app runs at `http://localhost:3000`.
 ## Build
 
 ```bash
-npm run build
-npm run preview
+pnpm build
+pnpm preview
 ```
 
 ## Tech Stack
@@ -44,6 +46,7 @@ npm run preview
 - [React](https://react.dev/)
 - [Vite](https://vitejs.dev/)
 - [Tailwind CSS v4](https://tailwindcss.com/)
+- [pnpm](https://pnpm.io/) (package manager — required)
 
 ## Contributing
 

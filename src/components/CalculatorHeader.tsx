@@ -49,7 +49,7 @@ export default function CalculatorHeader({
         </h1>
       </div>
 
-      <h2 className="mt-1 mb-4 text-xl font-normal text-white">
+      <h2 className="mt-1 mb-4 text-xl font-normal text-white text-pretty">
         {mode === "reverse"
           ? "Set a print size and target resolution to find exactly how many pixels your file needs."
           : "A tool for photographers, designers and artists to determine which print sizes their digital images can support at a given quality level."}

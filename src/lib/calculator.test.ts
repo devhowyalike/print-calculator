@@ -60,13 +60,12 @@ describe("formatLength", () => {
     expect(formatLength(40 / 12 + 1, false)).toBe(4.3);
   });
 
-  it("keeps enough feet precision that the conversion isn't lossy", () => {
-    // 40" → feet must stay close enough that x12xDPI still lands on 6000-class
-    // values, not the 3.3ft (=39.6") under-conversion the round formatter gave.
-    const feet = formatLength(40 / 12, true);
-    expect(feet).toBe(3.333);
-    // round-trip through the displayed value: 3.333 * 12 * 35 ceils to 1400.
-    expect(getRequiredPixels(feet * 12, feet * 12, 35).w).toBe(1400);
+  it("formats feet to three decimals (display precision only)", () => {
+    // This is a *display* helper. It is intentionally lossy (e.g. 8.5" → 0.708
+    // ft), which is why the calculator computes from the exact inches, not from
+    // this value — see ReverseCalculator.test.tsx.
+    expect(formatLength(40 / 12, true)).toBe(3.333);
+    expect(formatLength(8.5 / 12, true)).toBe(0.708);
   });
 
   it("trims trailing zeros on whole/clean feet values", () => {

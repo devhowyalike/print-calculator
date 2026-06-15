@@ -42,20 +42,25 @@ export default function ReverseCalculator() {
   const isFeet = unit === "ft";
   const unitMark = isFeet ? " ft" : '"';
 
-  // Compute from the *displayed* values (not the canonical refs) so the result
-  // always matches the numbers on screen, and empty/invalid input collapses to
-  // zero immediately rather than showing the last valid result.
-  const widthIn = widthVal * (isFeet ? 12 : 1);
-  const heightIn = heightVal * (isFeet ? 12 : 1);
-
+  // Compute from the canonical full-precision inches, never the rounded display
+  // value. Feet are shown to 3 dp, which is still lossy for fractional inches at
+  // high DPI (e.g. 8.5" → 0.708 ft would under-report by 1px), so the math must
+  // not go through the displayed value. The refs are kept exact on every valid
+  // edit and zeroed on invalid input, so results stay precise and collapse to
+  // '—' when a field is empty or negative.
   const { w, h, megapixels, aspect } = useMemo(() => {
-    const { w, h, megapixels } = getRequiredPixels(widthIn, heightIn, dpi);
-    return { w, h, megapixels, aspect: getAspectRatioString(widthVal, heightVal) };
-  }, [widthIn, heightIn, widthVal, heightVal, dpi]);
+    const wi = canonInchW.current;
+    const hi = canonInchH.current;
+    const { w, h, megapixels } = getRequiredPixels(wi, hi, dpi);
+    return { w, h, megapixels, aspect: getAspectRatioString(wi, hi) };
+    // widthStr/heightStr/unit gate recomputation; the refs hold the precise size.
+  }, [widthStr, heightStr, unit, dpi]);
 
   const hasResult = w > 0 && h > 0;
 
   // Keeps the displayed string and the canonical inches ref in sync on edit.
+  // Invalid/empty/negative input zeroes the ref so the result collapses to '—'
+  // instead of showing the last valid value.
   const editDim = (
     value: string,
     setStr: (v: string) => void,
@@ -63,7 +68,7 @@ export default function ReverseCalculator() {
   ) => {
     setStr(value);
     const n = parseFloat(value);
-    if (!isNaN(n) && n >= 0) canon.current = isFeet ? n * 12 : n;
+    canon.current = !isNaN(n) && n >= 0 ? (isFeet ? n * 12 : n) : 0;
   };
 
   const handleSwap = () => {

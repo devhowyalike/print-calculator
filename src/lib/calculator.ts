@@ -287,7 +287,9 @@ export function getAspectRatioLabel(
 
 // ── Size generation ──────────────────────────────────────────────────────────
 
-const LONG_SIDE_PROGRESSION_PRINT = [4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 36];
+const LONG_SIDE_PROGRESSION_PRINT = [
+  4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 36, 40, 48,
+];
 const LONG_SIDE_PROGRESSION_BILLBOARD = [
   60, 72, 96, 120, 144, 192, 240, 288, 360, 432, 480,
 ];
@@ -297,7 +299,7 @@ function formatSizeLabel(n: number, inFeet: boolean): string {
   return n % 1 === 0 ? String(Math.round(n)) : n.toFixed(1);
 }
 
-/** Generates exactly 11 print/billboard sizes that match the target aspect ratio. */
+/** Generates print/billboard sizes (one per long-side step) that match the target aspect ratio. */
 export function generateSizesForRatio(
   targetRatio: number,
   mode: Mode,

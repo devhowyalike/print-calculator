@@ -9,7 +9,9 @@
     "dev": "vite dev --port 3000 --host",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm test"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",

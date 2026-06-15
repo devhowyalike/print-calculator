@@ -114,11 +114,14 @@ export default function ReverseCalculator() {
         </span>
         <div className="flex items-center gap-2">
           <div className="flex items-center">
-            <span className={affixClass}>W</span>
+            <span className={affixClass} aria-hidden="true">
+              W
+            </span>
             <input
               type="number"
               inputMode="decimal"
               step="0.1"
+              aria-label={`Print width in ${isFeet ? "feet" : "inches"}`}
               value={widthStr}
               onChange={(e) => editDim(e.target.value, setWidthStr, canonInchW)}
               onBlur={(e) => handleInchBlur(e.target.value, setWidthStr, canonInchW)}
@@ -135,11 +138,14 @@ export default function ReverseCalculator() {
             <ArrowLeftRight className="h-4 w-4" />
           </button>
           <div className="flex items-center">
-            <span className={affixClass}>H</span>
+            <span className={affixClass} aria-hidden="true">
+              H
+            </span>
             <input
               type="number"
               inputMode="decimal"
               step="0.1"
+              aria-label={`Print height in ${isFeet ? "feet" : "inches"}`}
               value={heightStr}
               onChange={(e) => editDim(e.target.value, setHeightStr, canonInchH)}
               onBlur={(e) => handleInchBlur(e.target.value, setHeightStr, canonInchH)}
@@ -174,10 +180,13 @@ export default function ReverseCalculator() {
         </span>
         <div className="flex items-center gap-2">
           <div className="flex items-center">
-            <span className={affixClass}>DPI</span>
+            <span className={affixClass} aria-hidden="true">
+              DPI
+            </span>
             <input
               type="number"
               inputMode="numeric"
+              aria-label="Target DPI"
               value={dpiStr}
               onChange={(e) => setDpiStr(e.target.value)}
               onBlur={(e) => handleDpiBlur(e.target.value)}

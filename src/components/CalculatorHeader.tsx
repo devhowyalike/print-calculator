@@ -25,12 +25,19 @@ export default function CalculatorHeader({
     onAspectRatioReset();
     if (m === "print") {
       onDimensionsChange(String(DEFAULT_WIDTH), String(DEFAULT_HEIGHT));
-    } else {
+    } else if (m === "billboard") {
       onDimensionsChange(
         String(BILLBOARD_DEFAULT_WIDTH),
         String(BILLBOARD_DEFAULT_HEIGHT),
       );
     }
+    // "reverse" keeps the print-size inputs it manages on its own.
+  };
+
+  const MODE_LABELS: Record<Mode, string> = {
+    print: "Standard Print",
+    billboard: "Billboard / Large Format",
+    reverse: "Print → Pixels",
   };
 
   return (
@@ -43,25 +50,28 @@ export default function CalculatorHeader({
       </div>
 
       <h2 className="mt-1 mb-4 text-xl font-normal text-white">
-        A tool for photographers, designers and artists to determine which print
-        sizes their digital images can support at a given quality level.
+        {mode === "reverse"
+          ? "Set a print size and target resolution to find exactly how many pixels your file needs."
+          : "A tool for photographers, designers and artists to determine which print sizes their digital images can support at a given quality level."}
       </h2>
 
-      <div className="mt-5 mb-1 flex items-center gap-1 rounded-2xl border border-white/6 bg-app-card-surface p-1 w-fit shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
-        {(["print", "billboard"] as const).map((m) => (
+      <div className="mt-5 mb-1 flex flex-wrap items-center gap-1 rounded-2xl border border-white/6 bg-app-card-surface p-1 w-fit shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+        {(["print", "billboard", "reverse"] as const).map((m) => (
           <button
             key={m}
             onClick={() => handleModeClick(m)}
             className={`cursor-pointer rounded-lg px-4 py-[7px] text-sm font-medium transition-all duration-200 ${toggleButtonClass(mode === m)}`}
           >
-            {m === "print" ? "Standard Print" : "Billboard / Large Format"}
+            {MODE_LABELS[m]}
           </button>
         ))}
       </div>
 
-      <h3 className="mt-6 text-xl font-semibold leading-relaxed text-white">
-        Source file dimensions
-      </h3>
+      {mode !== "reverse" && (
+        <h3 className="mt-6 text-xl font-semibold leading-relaxed text-white">
+          Source file dimensions
+        </h3>
+      )}
     </div>
   );
 }

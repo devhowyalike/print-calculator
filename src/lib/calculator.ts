@@ -1,6 +1,6 @@
 // ── Types ────────────────────────────────────────────────────────────────────
 
-export type Mode = "print" | "billboard";
+export type Mode = "print" | "billboard" | "reverse";
 
 export type Status = "perfect" | "acceptable" | "stretch" | "poor";
 
@@ -52,6 +52,10 @@ export const DEFAULT_HEIGHT = 5120;
 
 export const BILLBOARD_DEFAULT_WIDTH = 14400;
 export const BILLBOARD_DEFAULT_HEIGHT = 7200;
+
+export const REVERSE_DEFAULT_WIDTH_IN = 30;
+export const REVERSE_DEFAULT_HEIGHT_IN = 40;
+export const REVERSE_DEFAULT_DPI = 200;
 
 // ── Size presets ─────────────────────────────────────────────────────────────
 
@@ -390,4 +394,45 @@ export function getViewingPPI(size: { w: number; h: number }) {
 export function getViewingPPIFromDistance(distanceFt: number): number {
   const distanceInches = distanceFt * 12;
   return 3438 / distanceInches;
+}
+
+// ── Reverse: print size + DPI → required pixels ───────────────────────────────
+
+/**
+ * Given a print size in inches and a target DPI, returns the pixel dimensions
+ * the source file must have to hit that resolution (pixels = inches × dpi).
+ */
+export function getRequiredPixels(
+  widthIn: number,
+  heightIn: number,
+  dpi: number,
+): { w: number; h: number; megapixels: number } {
+  const w = Math.round(Math.max(0, widthIn) * Math.max(0, dpi));
+  const h = Math.round(Math.max(0, heightIn) * Math.max(0, dpi));
+  return { w, h, megapixels: (w * h) / 1_000_000 };
+}
+
+/** Formats an integer pixel count with thousands separators (e.g. 9000 → "9,000"). */
+export function formatPixels(n: number): string {
+  return Math.round(n).toLocaleString("en-US");
+}
+
+/** Reduces a width/height to a simplified integer aspect ratio string, or null. */
+export function getAspectRatioString(
+  widthIn: number,
+  heightIn: number,
+): string | null {
+  if (widthIn <= 0 || heightIn <= 0) return null;
+  // Scale to integers (handles up to 2 decimal places) before reducing.
+  let a = Math.round(widthIn * 100);
+  let b = Math.round(heightIn * 100);
+  const gcd = (x: number, y: number): number => (y === 0 ? x : gcd(y, x % y));
+  const divisor = gcd(a, b) || 1;
+  a /= divisor;
+  b /= divisor;
+  // Keep ratios readable — fall back to a decimal form when terms get large.
+  if (a > 50 || b > 50) {
+    return `${(widthIn / heightIn).toFixed(2)} : 1`;
+  }
+  return `${a} : ${b}`;
 }

@@ -30,8 +30,9 @@ export default function ReverseCalculator() {
   const [heightStr, setHeightStr] = useState(String(REVERSE_DEFAULT_HEIGHT_IN));
   const [dpiStr, setDpiStr] = useState(String(REVERSE_DEFAULT_DPI));
 
-  // Full-precision inches kept solely so unit toggles round-trip losslessly
-  // (e.g. 40" → 3.3 ft → 40", not 39.6"); calculations use the displayed values.
+  // Full-precision inches — the source of truth for both the pixel math and
+  // lossless unit toggles (e.g. 40" → 3.333 ft → 40"). The displayed strings are
+  // only a rounded view; calculations always read these refs.
   const canonInchW = useRef(REVERSE_DEFAULT_WIDTH_IN);
   const canonInchH = useRef(REVERSE_DEFAULT_HEIGHT_IN);
 

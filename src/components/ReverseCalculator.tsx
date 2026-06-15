@@ -200,8 +200,9 @@ export default function ReverseCalculator() {
           </div>
           <span className="flex-1" />
           {aspect && (
-            <span className="whitespace-nowrap font-mono text-xs text-white sm:text-sm">
-              {aspect}
+            <span className="whitespace-nowrap text-xs text-zinc-500 sm:text-sm">
+              Aspect ratio:{" "}
+              <span className="font-mono text-white">{aspect}</span>
             </span>
           )}
         </div>

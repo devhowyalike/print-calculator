@@ -40,6 +40,14 @@ export default function CalculatorHeader({
     reverse: "→ Pixels",
   };
 
+  const MODE_DESCRIPTIONS: Record<Mode, string> = {
+    print:
+      "Common print sizes for handheld, arm's length and room-scale viewing.",
+    billboard:
+      "Large-format prints such as trade shows, storefronts and billboards.",
+    reverse: "Input the print size and get the minimum pixels your file needs.",
+  };
+
   return (
     <div className="mb-5">
       <div className="mb-1.5 flex items-center gap-2.5">
@@ -66,6 +74,10 @@ export default function CalculatorHeader({
           </button>
         ))}
       </div>
+
+      <p className="mt-2 text-sm text-zinc-500 text-pretty">
+        {MODE_DESCRIPTIONS[mode]}
+      </p>
 
       {mode !== "reverse" && (
         <h3 className="mt-6 text-xl font-semibold leading-relaxed text-white">

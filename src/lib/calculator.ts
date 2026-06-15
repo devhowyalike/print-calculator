@@ -45,11 +45,12 @@ export function getPPIDescription(dpi: number): string {
   return "Maximum \u2014 good handheld";
 }
 
-/** Returns the viewing-distance description for a billboard/large-format PPI target. */
+/** Describes a billboard/large-format PPI by its closest viewing preset. */
 export function getBillboardPPIDescription(ppi: number): string {
-  if (ppi >= 70) return "Indoor \u2014 viewed up close (trade show)";
-  if (ppi >= 28) return "Street level \u2014 storefront distance";
-  return "Highway \u2014 viewed from far away";
+  const closest = VIEWING_PRESETS.reduce((best, p) =>
+    Math.abs(p.ppi - ppi) < Math.abs(best.ppi - ppi) ? p : best,
+  );
+  return `${closest.label} \u2014 ${closest.description}`;
 }
 
 // ── Defaults ─────────────────────────────────────────────────────────────────

@@ -45,6 +45,8 @@ npm run preview
 
 Bug reports and pull requests are welcome. For major changes, open an issue first to discuss what you'd like to change.
 
+Maintainers: see [DEPLOY.md](DEPLOY.md) for the release and deploy process.
+
 > [!NOTE]
 > This project uses [pnpm](https://pnpm.io) for development and maintains a `pnpm-lock.yaml`. If you're contributing, use pnpm to keep the lockfile consistent: `npm i -g pnpm`.
 

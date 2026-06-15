@@ -18,11 +18,21 @@ import {
 
 type Unit = "in" | "ft";
 
-const inputClass =
-  "w-[80px] sm:w-[90px] rounded-r-lg border border-l-0 border-white/8 bg-app-card px-3 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] focus:border-white/15 focus:ring-1 focus:ring-white/8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]";
+const inputBase =
+  "w-[60px] sm:w-[80px] bg-app-card px-2 py-[7px] text-center font-mono text-sm font-medium text-zinc-200 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] focus:border-white/15 focus:ring-1 focus:ring-white/8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]";
+
+// Input with only a leading affix (right edge rounded/bordered).
+const inputClass = `${inputBase} rounded-r-lg border border-l-0 border-white/8`;
+
+// Input sandwiched between a leading affix and a trailing unit affix.
+const inputMidClass = `${inputBase} border-y border-white/8`;
 
 const affixClass =
   "flex items-center justify-center rounded-l-lg border border-r-0 border-white/8 bg-app-card px-2 py-[7px] text-sm font-medium text-zinc-500";
+
+// Trailing unit affix, mirrors affixClass on the right edge.
+const suffixClass =
+  "flex items-center justify-center rounded-r-lg border border-l-0 border-white/8 bg-app-card px-2 py-[7px] font-mono text-sm font-medium text-zinc-500";
 
 export default function ReverseCalculator() {
   const [unit, setUnit] = useState<Unit>("in");
@@ -124,11 +134,25 @@ export default function ReverseCalculator() {
   return (
     <>
       {/* Print dimensions (inches) */}
-      <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] sm:flex-row sm:items-center sm:gap-4">
-        <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
-          Print Size
-        </span>
-        <div className="flex items-center gap-2">
+      <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+        <div className="flex items-center justify-between gap-3">
+          <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+            Print Size
+          </span>
+          <div className="flex items-center gap-1.5">
+            {(["in", "ft"] as const).map((u) => (
+              <button
+                key={u}
+                type="button"
+                onClick={() => handleUnitChange(u)}
+                className={`cursor-pointer rounded-lg px-3 py-[7px] text-sm font-medium transition-all duration-200 ${toggleButtonClass(unit === u)}`}
+              >
+                {u === "in" ? "inches" : "feet"}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center">
             <span className={affixClass} aria-hidden="true">
               W
@@ -141,8 +165,11 @@ export default function ReverseCalculator() {
               value={widthStr}
               onChange={(e) => editDim(e.target.value, setWidthStr, canonInchW)}
               onBlur={(e) => handleInchBlur(e.target.value, setWidthStr, canonInchW)}
-              className={inputClass}
+              className={inputMidClass}
             />
+            <span className={suffixClass} aria-hidden="true">
+              {isFeet ? "ft" : "in"}
+            </span>
           </div>
           <button
             type="button"
@@ -165,51 +192,33 @@ export default function ReverseCalculator() {
               value={heightStr}
               onChange={(e) => editDim(e.target.value, setHeightStr, canonInchH)}
               onBlur={(e) => handleInchBlur(e.target.value, setHeightStr, canonInchH)}
-              className={inputClass}
+              className={inputMidClass}
             />
+            <span className={suffixClass} aria-hidden="true">
+              {isFeet ? "ft" : "in"}
+            </span>
           </div>
-          <div className="ml-1 flex items-center gap-1.5">
-            {(["in", "ft"] as const).map((u) => (
-              <button
-                key={u}
-                type="button"
-                onClick={() => handleUnitChange(u)}
-                className={`cursor-pointer rounded-lg px-3 py-[7px] text-sm font-medium transition-all duration-200 ${toggleButtonClass(unit === u)}`}
-              >
-                {u === "in" ? "inches" : "feet"}
-              </button>
-            ))}
-          </div>
+          <span className="flex-1" />
+          {aspect && (
+            <span className="whitespace-nowrap text-xs text-zinc-500 sm:text-sm">
+              Aspect ratio:{" "}
+              <span className="font-mono text-white">{aspect}</span>
+            </span>
+          )}
         </div>
-        <span className="sm:flex-1" />
-        {aspect && (
-          <span className="hidden whitespace-nowrap font-mono text-xs text-white sm:inline sm:text-sm">
-            {aspect}
-          </span>
-        )}
       </div>
 
       {/* Target DPI */}
-      <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
+      <div className="mb-4 flex flex-col gap-4 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
         <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
           Target DPI
         </span>
-        <div className="flex items-center gap-2">
-          <div className="flex items-center">
-            <span className={affixClass} aria-hidden="true">
-              DPI
-            </span>
-            <input
-              type="number"
-              inputMode="numeric"
-              aria-label="Target DPI"
-              value={dpiStr}
-              onChange={(e) => setDpiStr(e.target.value)}
-              onBlur={(e) => handleDpiBlur(e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div className="flex items-center gap-1.5">
+
+        <div className="flex flex-col gap-2">
+          <span className="text-[11px] font-medium uppercase tracking-wide text-zinc-600">
+            Presets
+          </span>
+          <div className="flex flex-wrap items-center gap-1.5">
             {isFeet
               ? VIEWING_PRESETS.map((preset) => (
                   <button
@@ -232,11 +241,30 @@ export default function ReverseCalculator() {
                   </button>
                 ))}
           </div>
+          <span className="text-sm text-white">
+            {isFeet ? getBillboardPPIDescription(dpi) : getPPIDescription(dpi)}
+          </span>
         </div>
-        <span className="hidden sm:block sm:flex-1" />
-        <span className="text-sm text-white">
-          {isFeet ? getBillboardPPIDescription(dpi) : getPPIDescription(dpi)}
-        </span>
+
+        <div className="flex flex-col gap-2">
+          <span className="text-[11px] font-medium uppercase tracking-wide text-zinc-600">
+            Customize
+          </span>
+          <div className="flex items-center">
+            <span className={affixClass} aria-hidden="true">
+              DPI
+            </span>
+            <input
+              type="number"
+              inputMode="numeric"
+              aria-label="Target DPI"
+              value={dpiStr}
+              onChange={(e) => setDpiStr(e.target.value)}
+              onBlur={(e) => handleDpiBlur(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+        </div>
       </div>
 
       <p className="mb-7 mt-[-4px] text-sm leading-relaxed text-zinc-500">

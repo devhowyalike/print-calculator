@@ -35,9 +35,17 @@ export default function CalculatorHeader({
   };
 
   const MODE_LABELS: Record<Mode, string> = {
-    print: "Standard Print",
-    billboard: "Billboard / Large Format",
-    reverse: "Print → Pixels",
+    print: "Standard",
+    billboard: "Billboard",
+    reverse: "→ Pixels",
+  };
+
+  const MODE_DESCRIPTIONS: Record<Mode, string> = {
+    print:
+      "Common print sizes for handheld, arm's length and room-scale viewing.",
+    billboard:
+      "Large-format prints such as trade shows, storefronts and billboards.",
+    reverse: "Input the print size and get the minimum pixels your file needs.",
   };
 
   return (
@@ -49,7 +57,7 @@ export default function CalculatorHeader({
         </h1>
       </div>
 
-      <h2 className="mt-1 mb-4 text-xl font-normal text-white">
+      <h2 className="mt-1 mb-4 text-xl font-normal text-white text-pretty">
         {mode === "reverse"
           ? "Set a print size and target resolution to find exactly how many pixels your file needs."
           : "A tool for photographers, designers and artists to determine which print sizes their digital images can support at a given quality level."}
@@ -66,6 +74,10 @@ export default function CalculatorHeader({
           </button>
         ))}
       </div>
+
+      <p className="mt-2 text-sm text-zinc-500 text-pretty">
+        {MODE_DESCRIPTIONS[mode]}
+      </p>
 
       {mode !== "reverse" && (
         <h3 className="mt-6 text-xl font-semibold leading-relaxed text-white">

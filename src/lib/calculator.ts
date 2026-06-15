@@ -223,16 +223,16 @@ export function isExactAspectMatch(
   return Math.abs(ratio - presetRatio) < 0.0001;
 }
 
-/** Formats display name for a size (print: inches, billboard: feet). */
+/** Formats display name for a size (billboard: feet, otherwise inches). */
 export function formatDisplayName(
   displayW: number,
   displayH: number,
   mode: Mode,
 ): string {
-  if (mode === "print") {
-    return `${formatDim(displayW)}\u00d7${formatDim(displayH)}"`;
+  if (mode === "billboard") {
+    return `${Math.round(displayW / 12)}\u00d7${Math.round(displayH / 12)} ft`;
   }
-  return `${Math.round(displayW / 12)}\u00d7${Math.round(displayH / 12)} ft`;
+  return `${formatDim(displayW)}\u00d7${formatDim(displayH)}"`;
 }
 
 // ── Aspect ratio logic ───────────────────────────────────────────────────────
@@ -305,12 +305,11 @@ export function generateSizesForRatio(
   mode: Mode,
 ): { name: string; w: number; h: number }[] {
   if (targetRatio <= 0) return [];
-  const progression =
-    mode === "print"
-      ? LONG_SIDE_PROGRESSION_PRINT
-      : LONG_SIDE_PROGRESSION_BILLBOARD;
-  const suffix = mode === "print" ? '"' : " ft";
   const inFeet = mode === "billboard";
+  const progression = inFeet
+    ? LONG_SIDE_PROGRESSION_BILLBOARD
+    : LONG_SIDE_PROGRESSION_PRINT;
+  const suffix = inFeet ? " ft" : '"';
 
   return progression.map((longSide) => {
     let w: number;

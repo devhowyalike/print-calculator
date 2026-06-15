@@ -7,11 +7,11 @@
   },
   "scripts": {
     "dev": "vite dev --port 3000 --host",
-    "build": "npm run check && vite build",
+    "build": "pnpm check && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm test"
+    "check": "pnpm typecheck && pnpm test"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",

@@ -42,6 +42,14 @@ export default function ReverseCalculator() {
   const isFeet = unit === "ft";
   const unitMark = isFeet ? " ft" : '"';
 
+  // In feet mode the shown value can be a rounded view of a more precise size
+  // (e.g. 8.5" displays as 0.708 ft). Flag that so the size reads as approximate,
+  // since the pixel math deliberately uses the exact inches behind it.
+  const sizeIsApprox =
+    isFeet &&
+    (Math.abs(canonInchW.current - widthVal * 12) > 1e-6 ||
+      Math.abs(canonInchH.current - heightVal * 12) > 1e-6);
+
   // Compute from the canonical full-precision inches, never the rounded display
   // value. Feet are shown to 3 dp, which is still lossy for fractional inches at
   // high DPI (e.g. 8.5" → 0.708 ft would under-report by 1px), so the math must
@@ -232,9 +240,19 @@ export default function ReverseCalculator() {
 
       <p className="mb-7 mt-[-4px] text-sm leading-relaxed text-zinc-500">
         Your file needs at least this many pixels to print{" "}
-        {formatLength(widthVal, isFeet)}×{formatLength(heightVal, isFeet)}
-        {unitMark} at {dpi} DPI — fewer pixels means the print falls below the
-        target resolution.
+        <span
+          title={
+            sizeIsApprox
+              ? "Size shown rounded; pixels are computed from the exact dimensions."
+              : undefined
+          }
+        >
+          {sizeIsApprox ? "≈" : ""}
+          {formatLength(widthVal, isFeet)}×{formatLength(heightVal, isFeet)}
+          {unitMark}
+        </span>{" "}
+        at {dpi} DPI — fewer pixels means the print falls below the target
+        resolution.
       </p>
 
       {/* Result */}

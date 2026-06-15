@@ -30,6 +30,22 @@ describe("ReverseCalculator", () => {
     expect(container.textContent).toMatch(/2,550\s*×\s*2,550/);
   });
 
+  it("marks the size approximate when feet rounding hides precision", () => {
+    const { container } = render(<ReverseCalculator />);
+    setField("Print width in inches", "8.5");
+    setField("Print height in inches", "8.5");
+    fireEvent.click(screen.getByText("feet")); // 8.5" shows as 0.708 ft
+    expect(container.textContent).toContain("≈");
+  });
+
+  it("does not mark exact feet values as approximate", () => {
+    const { container } = render(<ReverseCalculator />);
+    setField("Print width in inches", "24"); // 2 ft exactly
+    setField("Print height in inches", "36"); // 3 ft exactly
+    fireEvent.click(screen.getByText("feet"));
+    expect(container.textContent).not.toContain("≈");
+  });
+
   it("collapses to a placeholder when a dimension is cleared", () => {
     const { container } = render(<ReverseCalculator />);
     setField("Print width in inches", "");

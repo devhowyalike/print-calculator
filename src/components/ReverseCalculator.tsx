@@ -30,8 +30,8 @@ export default function ReverseCalculator() {
   const [heightStr, setHeightStr] = useState(String(REVERSE_DEFAULT_HEIGHT_IN));
   const [dpiStr, setDpiStr] = useState(String(REVERSE_DEFAULT_DPI));
 
-  // Source of truth for the print size, always in inches at full precision, so
-  // toggling units never round-trips through the rounded display value.
+  // Full-precision inches kept solely so unit toggles round-trip losslessly
+  // (e.g. 40" → 3.3 ft → 40", not 39.6"); calculations use the displayed values.
   const canonInchW = useRef(REVERSE_DEFAULT_WIDTH_IN);
   const canonInchH = useRef(REVERSE_DEFAULT_HEIGHT_IN);
 
@@ -42,13 +42,16 @@ export default function ReverseCalculator() {
   const isFeet = unit === "ft";
   const unitMark = isFeet ? " ft" : '"';
 
+  // Compute from the *displayed* values (not the canonical refs) so the result
+  // always matches the numbers on screen, and empty/invalid input collapses to
+  // zero immediately rather than showing the last valid result.
+  const widthIn = widthVal * (isFeet ? 12 : 1);
+  const heightIn = heightVal * (isFeet ? 12 : 1);
+
   const { w, h, megapixels, aspect } = useMemo(() => {
-    const wi = canonInchW.current;
-    const hi = canonInchH.current;
-    const { w, h, megapixels } = getRequiredPixels(wi, hi, dpi);
-    return { w, h, megapixels, aspect: getAspectRatioString(wi, hi) };
-    // widthStr/heightStr/unit are deps so edits and toggles recompute from the refs.
-  }, [widthStr, heightStr, unit, dpi]);
+    const { w, h, megapixels } = getRequiredPixels(widthIn, heightIn, dpi);
+    return { w, h, megapixels, aspect: getAspectRatioString(widthVal, heightVal) };
+  }, [widthIn, heightIn, widthVal, heightVal, dpi]);
 
   const hasResult = w > 0 && h > 0;
 

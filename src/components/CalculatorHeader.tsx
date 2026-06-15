@@ -35,9 +35,9 @@ export default function CalculatorHeader({
   };
 
   const MODE_LABELS: Record<Mode, string> = {
-    print: "Standard Print",
-    billboard: "Billboard / Large Format",
-    reverse: "Print → Pixels",
+    print: "Standard",
+    billboard: "Billboard",
+    reverse: "→ Pixels",
   };
 
   return (

@@ -209,25 +209,15 @@ export default function ReverseCalculator() {
       </div>
 
       {/* Target DPI */}
-      <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
+      <div className="mb-4 flex flex-col gap-4 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
         <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
           Target DPI
         </span>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center">
-            <span className={affixClass} aria-hidden="true">
-              DPI
-            </span>
-            <input
-              type="number"
-              inputMode="numeric"
-              aria-label="Target DPI"
-              value={dpiStr}
-              onChange={(e) => setDpiStr(e.target.value)}
-              onBlur={(e) => handleDpiBlur(e.target.value)}
-              className={inputClass}
-            />
-          </div>
+
+        <div className="flex flex-col gap-2">
+          <span className="text-[11px] font-medium uppercase tracking-wide text-zinc-600">
+            Presets
+          </span>
           <div className="flex flex-wrap items-center gap-1.5">
             {isFeet
               ? VIEWING_PRESETS.map((preset) => (
@@ -251,11 +241,30 @@ export default function ReverseCalculator() {
                   </button>
                 ))}
           </div>
+          <span className="text-sm text-white">
+            {isFeet ? getBillboardPPIDescription(dpi) : getPPIDescription(dpi)}
+          </span>
         </div>
-        <span className="hidden sm:block sm:flex-1" />
-        <span className="text-sm text-white">
-          {isFeet ? getBillboardPPIDescription(dpi) : getPPIDescription(dpi)}
-        </span>
+
+        <div className="flex flex-col gap-2">
+          <span className="text-[11px] font-medium uppercase tracking-wide text-zinc-600">
+            Customize
+          </span>
+          <div className="flex items-center">
+            <span className={affixClass} aria-hidden="true">
+              DPI
+            </span>
+            <input
+              type="number"
+              inputMode="numeric"
+              aria-label="Target DPI"
+              value={dpiStr}
+              onChange={(e) => setDpiStr(e.target.value)}
+              onBlur={(e) => handleDpiBlur(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+        </div>
       </div>
 
       <p className="mb-7 mt-[-4px] text-sm leading-relaxed text-zinc-500">

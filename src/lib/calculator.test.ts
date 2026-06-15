@@ -3,6 +3,7 @@ import {
   getRequiredPixels,
   getAspectRatioString,
   formatDim,
+  formatLength,
   formatDisplayName,
   getBillboardPPIDescription,
   generateSizesForRatio,
@@ -50,6 +51,27 @@ describe("formatDim", () => {
     expect(formatDim(30)).toBe(30);
     expect(formatDim(2.5)).toBe(2.5);
     expect(formatDim(40 / 12)).toBe(3.3);
+  });
+});
+
+describe("formatLength", () => {
+  it("formats inches to one decimal", () => {
+    expect(formatLength(30, false)).toBe(30);
+    expect(formatLength(40 / 12 + 1, false)).toBe(4.3);
+  });
+
+  it("keeps enough feet precision that the conversion isn't lossy", () => {
+    // 40" → feet must stay close enough that x12xDPI still lands on 6000-class
+    // values, not the 3.3ft (=39.6") under-conversion the round formatter gave.
+    const feet = formatLength(40 / 12, true);
+    expect(feet).toBe(3.333);
+    // round-trip through the displayed value: 3.333 * 12 * 35 ceils to 1400.
+    expect(getRequiredPixels(feet * 12, feet * 12, 35).w).toBe(1400);
+  });
+
+  it("trims trailing zeros on whole/clean feet values", () => {
+    expect(formatLength(14, true)).toBe(14);
+    expect(formatLength(2.5, true)).toBe(2.5);
   });
 });
 

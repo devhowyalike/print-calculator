@@ -8,7 +8,7 @@ import {
   getRequiredPixels,
   getAspectRatioString,
   formatPixels,
-  formatDim,
+  formatLength,
   toggleButtonClass,
   REVERSE_DEFAULT_WIDTH_IN,
   REVERSE_DEFAULT_HEIGHT_IN,
@@ -76,9 +76,11 @@ export default function ReverseCalculator() {
 
   const handleUnitChange = (next: Unit) => {
     if (next === unit) return;
-    // Re-derive each display string from the precise inches we've kept.
+    // Re-derive each display string from the precise inches we've kept, keeping
+    // enough feet precision that the converted value still drives the same math.
+    const nextIsFeet = next === "ft";
     const toDisplay = (inches: number) =>
-      String(formatDim(next === "ft" ? inches / 12 : inches));
+      String(formatLength(nextIsFeet ? inches / 12 : inches, nextIsFeet));
     setWidthStr(toDisplay(canonInchW.current));
     setHeightStr(toDisplay(canonInchH.current));
     setDpiStr(String(next === "ft" ? REVERSE_DEFAULT_FEET_DPI : REVERSE_DEFAULT_DPI));
@@ -96,7 +98,7 @@ export default function ReverseCalculator() {
       canon.current = 0;
       return;
     }
-    setStr(String(formatDim(n)));
+    setStr(String(formatLength(n, isFeet)));
     canon.current = isFeet ? n * 12 : n;
   };
 
@@ -224,8 +226,8 @@ export default function ReverseCalculator() {
       </div>
 
       <p className="mb-7 mt-[-4px] text-sm leading-relaxed text-zinc-500">
-        Your file needs at least this many pixels to print {formatDim(widthVal)}×
-        {formatDim(heightVal)}
+        Your file needs at least this many pixels to print{" "}
+        {formatLength(widthVal, isFeet)}×{formatLength(heightVal, isFeet)}
         {unitMark} at {dpi} DPI — fewer pixels means the print falls below the
         target resolution.
       </p>

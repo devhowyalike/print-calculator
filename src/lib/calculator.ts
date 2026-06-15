@@ -205,6 +205,16 @@ export function formatDim(n: number): number {
     : parseFloat(n.toFixed(1));
 }
 
+/**
+ * Formats a print dimension for display in its unit. Feet keep up to 3 decimals
+ * (trailing zeros trimmed) so a value converted from inches stays accurate
+ * enough to drive the pixel math — e.g. 40" → 3.333 ft, not a lossy 3.3.
+ * Inches use formatDim (1 decimal), matching the input step.
+ */
+export function formatLength(n: number, inFeet: boolean): number {
+  return inFeet ? parseFloat(n.toFixed(3)) : formatDim(n);
+}
+
 /** Returns the aspect ratio from dimensions, or 0 if invalid. */
 export function getTargetRatio(w: number, h: number): number {
   return w > 0 && h > 0 ? w / h : 0;

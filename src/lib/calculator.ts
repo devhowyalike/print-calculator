@@ -45,6 +45,13 @@ export function getPPIDescription(dpi: number): string {
   return "Maximum \u2014 good handheld";
 }
 
+/** Returns the viewing-distance description for a billboard/large-format PPI target. */
+export function getBillboardPPIDescription(ppi: number): string {
+  if (ppi >= 70) return "Indoor \u2014 viewed up close (trade show)";
+  if (ppi >= 28) return "Street level \u2014 storefront distance";
+  return "Highway \u2014 viewed from far away";
+}
+
 // ── Defaults ─────────────────────────────────────────────────────────────────
 
 export const DEFAULT_WIDTH = 4096;
@@ -56,6 +63,9 @@ export const BILLBOARD_DEFAULT_HEIGHT = 7200;
 export const REVERSE_DEFAULT_WIDTH_IN = 30;
 export const REVERSE_DEFAULT_HEIGHT_IN = 40;
 export const REVERSE_DEFAULT_DPI = 200;
+
+/** Default target PPI when the reverse calculator is switched to feet (billboard scale). */
+export const REVERSE_DEFAULT_FEET_DPI = 35;
 
 // ── Size presets ─────────────────────────────────────────────────────────────
 

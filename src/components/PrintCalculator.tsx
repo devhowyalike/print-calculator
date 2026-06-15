@@ -23,6 +23,7 @@ import {
 } from "../lib/calculator";
 
 import CalculatorHeader from "./CalculatorHeader";
+import ReverseCalculator from "./ReverseCalculator";
 import DimensionInputs from "./DimensionInputs";
 import PPIOrViewingSelector from "./PPIOrViewingSelector";
 import AspectRatioSelector from "./AspectRatioSelector";
@@ -143,71 +144,77 @@ export default function PrintCalculator() {
         onAspectRatioReset={handleAspectRatioReset}
       />
 
-      <DimensionInputs
-        pixelWStr={pixelWStr}
-        pixelHStr={pixelHStr}
-        megapixels={megapixels}
-        onPixelWChange={setPixelWStr}
-        onPixelHChange={setPixelHStr}
-        onSwap={handleSwap}
-      />
+      {mode === "reverse" && <ReverseCalculator />}
 
-      {mode === "print" ? (
-        <PPIOrViewingSelector
-          mode="print"
-          dpi={dpi}
-          onDpiChange={setDpi}
-        />
-      ) : (
-        <PPIOrViewingSelector
-          mode="billboard"
-          viewingDistanceFt={viewingDistanceFt}
-          onViewingDistanceChange={setViewingDistanceFt}
-          currentPreset={currentPreset}
-          currentPresetPPI={currentPresetPPI}
-        />
-      )}
+      {mode !== "reverse" && (
+        <>
+          <DimensionInputs
+            pixelWStr={pixelWStr}
+            pixelHStr={pixelHStr}
+            megapixels={megapixels}
+            onPixelWChange={setPixelWStr}
+            onPixelHChange={setPixelHStr}
+            onSwap={handleSwap}
+          />
 
-      <AspectRatioSelector
-        pixelW={pixelW}
-        pixelH={pixelH}
-        aspectRatio={aspectRatio}
-        effectiveW={effectiveW}
-        effectiveH={effectiveH}
-        closestAspectRatio={closestAspectRatio}
-        isExactAspectMatch={exactAspectMatch}
-        onAspectRatioChange={setAspectRatio}
-      />
+          {mode === "print" ? (
+            <PPIOrViewingSelector
+              mode="print"
+              dpi={dpi}
+              onDpiChange={setDpi}
+            />
+          ) : (
+            <PPIOrViewingSelector
+              mode="billboard"
+              viewingDistanceFt={viewingDistanceFt}
+              onViewingDistanceChange={setViewingDistanceFt}
+              currentPreset={currentPreset}
+              currentPresetPPI={currentPresetPPI}
+            />
+          )}
 
-      <InfoParagraph mode={mode} />
+          <AspectRatioSelector
+            pixelW={pixelW}
+            pixelH={pixelH}
+            aspectRatio={aspectRatio}
+            effectiveW={effectiveW}
+            effectiveH={effectiveH}
+            closestAspectRatio={closestAspectRatio}
+            isExactAspectMatch={exactAspectMatch}
+            onAspectRatioChange={setAspectRatio}
+          />
 
-      <SummaryCards
-        mode={mode}
-        data={data}
-        excellentCount={excellent}
-        lastExcellent={lastExcellent}
-      />
+          <InfoParagraph mode={mode} />
 
-      <SizesTable mode={mode} data={data} />
+          <SummaryCards
+            mode={mode}
+            data={data}
+            excellentCount={excellent}
+            lastExcellent={lastExcellent}
+          />
 
-      <QualityLegend activeDpi={activeDpi} />
+          <SizesTable mode={mode} data={data} />
 
-      {mode === "print" ? (
-        <HelpNotes
-          mode="print"
-          effectiveW={effectiveW}
-          effectiveH={effectiveH}
-          dpi={dpi}
-        />
-      ) : (
-        <HelpNotes
-          mode="billboard"
-          effectiveW={effectiveW}
-          effectiveH={effectiveH}
-          currentPreset={currentPreset}
-          currentPresetPPI={currentPresetPPI}
-          viewingDistanceFt={viewingDistanceFt}
-        />
+          <QualityLegend activeDpi={activeDpi} />
+
+          {mode === "print" ? (
+            <HelpNotes
+              mode="print"
+              effectiveW={effectiveW}
+              effectiveH={effectiveH}
+              dpi={dpi}
+            />
+          ) : (
+            <HelpNotes
+              mode="billboard"
+              effectiveW={effectiveW}
+              effectiveH={effectiveH}
+              currentPreset={currentPreset}
+              currentPresetPPI={currentPresetPPI}
+              viewingDistanceFt={viewingDistanceFt}
+            />
+          )}
+        </>
       )}
     </>
   );

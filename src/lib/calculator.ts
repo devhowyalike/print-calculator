@@ -45,6 +45,14 @@ export function getPPIDescription(dpi: number): string {
   return "Maximum \u2014 good handheld";
 }
 
+/** Describes a billboard/large-format PPI by its closest viewing preset. */
+export function getBillboardPPIDescription(ppi: number): string {
+  const closest = VIEWING_PRESETS.reduce((best, p) =>
+    Math.abs(p.ppi - ppi) < Math.abs(best.ppi - ppi) ? p : best,
+  );
+  return `${closest.label} \u2014 ${closest.description}`;
+}
+
 // ── Defaults ─────────────────────────────────────────────────────────────────
 
 export const DEFAULT_WIDTH = 4096;
@@ -56,6 +64,9 @@ export const BILLBOARD_DEFAULT_HEIGHT = 7200;
 export const REVERSE_DEFAULT_WIDTH_IN = 30;
 export const REVERSE_DEFAULT_HEIGHT_IN = 40;
 export const REVERSE_DEFAULT_DPI = 200;
+
+/** Default target PPI when the reverse calculator is switched to feet (billboard scale). */
+export const REVERSE_DEFAULT_FEET_DPI = 35;
 
 // ── Size presets ─────────────────────────────────────────────────────────────
 
@@ -194,6 +205,16 @@ export function formatDim(n: number): number {
     : parseFloat(n.toFixed(1));
 }
 
+/**
+ * Formats a print dimension for display in its unit. Feet keep up to 3 decimals
+ * (trailing zeros trimmed) so a value converted from inches stays accurate
+ * enough to drive the pixel math — e.g. 40" → 3.333 ft, not a lossy 3.3.
+ * Inches use formatDim (1 decimal), matching the input step.
+ */
+export function formatLength(n: number, inFeet: boolean): number {
+  return inFeet ? parseFloat(n.toFixed(3)) : formatDim(n);
+}
+
 /** Returns the aspect ratio from dimensions, or 0 if invalid. */
 export function getTargetRatio(w: number, h: number): number {
   return w > 0 && h > 0 ? w / h : 0;
@@ -212,16 +233,16 @@ export function isExactAspectMatch(
   return Math.abs(ratio - presetRatio) < 0.0001;
 }
 
-/** Formats display name for a size (print: inches, billboard: feet). */
+/** Formats display name for a size (billboard: feet, otherwise inches). */
 export function formatDisplayName(
   displayW: number,
   displayH: number,
   mode: Mode,
 ): string {
-  if (mode === "print") {
-    return `${formatDim(displayW)}\u00d7${formatDim(displayH)}"`;
+  if (mode === "billboard") {
+    return `${Math.round(displayW / 12)}\u00d7${Math.round(displayH / 12)} ft`;
   }
-  return `${Math.round(displayW / 12)}\u00d7${Math.round(displayH / 12)} ft`;
+  return `${formatDim(displayW)}\u00d7${formatDim(displayH)}"`;
 }
 
 // ── Aspect ratio logic ───────────────────────────────────────────────────────
@@ -276,7 +297,9 @@ export function getAspectRatioLabel(
 
 // ── Size generation ──────────────────────────────────────────────────────────
 
-const LONG_SIDE_PROGRESSION_PRINT = [4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 36];
+const LONG_SIDE_PROGRESSION_PRINT = [
+  4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 36, 40, 48,
+];
 const LONG_SIDE_PROGRESSION_BILLBOARD = [
   60, 72, 96, 120, 144, 192, 240, 288, 360, 432, 480,
 ];
@@ -286,18 +309,17 @@ function formatSizeLabel(n: number, inFeet: boolean): string {
   return n % 1 === 0 ? String(Math.round(n)) : n.toFixed(1);
 }
 
-/** Generates exactly 11 print/billboard sizes that match the target aspect ratio. */
+/** Generates print/billboard sizes (one per long-side step) that match the target aspect ratio. */
 export function generateSizesForRatio(
   targetRatio: number,
   mode: Mode,
 ): { name: string; w: number; h: number }[] {
   if (targetRatio <= 0) return [];
-  const progression =
-    mode === "print"
-      ? LONG_SIDE_PROGRESSION_PRINT
-      : LONG_SIDE_PROGRESSION_BILLBOARD;
-  const suffix = mode === "print" ? '"' : " ft";
   const inFeet = mode === "billboard";
+  const progression = inFeet
+    ? LONG_SIDE_PROGRESSION_BILLBOARD
+    : LONG_SIDE_PROGRESSION_PRINT;
+  const suffix = inFeet ? " ft" : '"';
 
   return progression.map((longSide) => {
     let w: number;
@@ -407,8 +429,10 @@ export function getRequiredPixels(
   heightIn: number,
   dpi: number,
 ): { w: number; h: number; megapixels: number } {
-  const w = Math.round(Math.max(0, widthIn) * Math.max(0, dpi));
-  const h = Math.round(Math.max(0, heightIn) * Math.max(0, dpi));
+  // Round up: the result is the *minimum* pixels needed, so a fractional
+  // product must clear the next whole pixel rather than truncate below target.
+  const w = Math.ceil(Math.max(0, widthIn) * Math.max(0, dpi));
+  const h = Math.ceil(Math.max(0, heightIn) * Math.max(0, dpi));
   return { w, h, megapixels: (w * h) / 1_000_000 };
 }
 

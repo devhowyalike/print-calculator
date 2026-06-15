@@ -420,8 +420,10 @@ export function getRequiredPixels(
   heightIn: number,
   dpi: number,
 ): { w: number; h: number; megapixels: number } {
-  const w = Math.round(Math.max(0, widthIn) * Math.max(0, dpi));
-  const h = Math.round(Math.max(0, heightIn) * Math.max(0, dpi));
+  // Round up: the result is the *minimum* pixels needed, so a fractional
+  // product must clear the next whole pixel rather than truncate below target.
+  const w = Math.ceil(Math.max(0, widthIn) * Math.max(0, dpi));
+  const h = Math.ceil(Math.max(0, heightIn) * Math.max(0, dpi));
   return { w, h, megapixels: (w * h) / 1_000_000 };
 }
 

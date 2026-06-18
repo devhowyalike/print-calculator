@@ -28,11 +28,11 @@ const inputClass = `${inputBase} rounded-r-lg border border-l-0 border-white/8`;
 const inputMidClass = `${inputBase} border-y border-white/8`;
 
 const affixClass =
-  "flex items-center justify-center rounded-l-lg border border-r-0 border-white/8 bg-app-card px-2 py-[7px] text-sm font-medium text-zinc-500";
+  "flex items-center justify-center rounded-l-lg border border-r-0 border-white/8 bg-app-card px-2 py-[7px] text-sm font-medium text-app-muted";
 
 // Trailing unit affix, mirrors affixClass on the right edge.
 const suffixClass =
-  "flex items-center justify-center rounded-r-lg border border-l-0 border-white/8 bg-app-card px-2 py-[7px] font-mono text-sm font-medium text-zinc-500";
+  "flex items-center justify-center rounded-r-lg border border-l-0 border-white/8 bg-app-card px-2 py-[7px] font-mono text-sm font-medium text-app-muted";
 
 export default function ReverseCalculator() {
   const [unit, setUnit] = useState<Unit>("in");
@@ -136,7 +136,7 @@ export default function ReverseCalculator() {
       {/* Print dimensions (inches) */}
       <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
         <div className="flex items-center justify-between gap-3">
-          <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+          <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-app-muted">
             Print Size
           </span>
           <div className="flex items-center gap-1.5">
@@ -174,7 +174,7 @@ export default function ReverseCalculator() {
           <button
             type="button"
             onClick={handleSwap}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/8 bg-app-card text-zinc-500 transition-colors hover:border-white/15 hover:bg-app-hover hover:text-zinc-300"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/8 bg-app-card text-app-muted transition-colors hover:border-white/15 hover:bg-app-hover hover:text-zinc-300"
             title="Swap dimensions"
             aria-label="Swap width and height"
           >
@@ -200,7 +200,7 @@ export default function ReverseCalculator() {
           </div>
           <span className="flex-1" />
           {aspect && (
-            <span className="whitespace-nowrap text-xs text-zinc-500 sm:text-sm">
+            <span className="whitespace-nowrap text-xs text-app-muted sm:text-sm">
               Aspect ratio:{" "}
               <span className="font-mono text-white">{aspect}</span>
             </span>
@@ -210,12 +210,12 @@ export default function ReverseCalculator() {
 
       {/* Target DPI */}
       <div className="mb-4 flex flex-col gap-4 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
-        <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+        <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-app-muted">
           Target DPI
         </span>
 
         <div className="flex flex-col gap-2">
-          <span className="text-[11px] font-medium uppercase tracking-wide text-zinc-600">
+          <span className="text-[11px] font-medium uppercase tracking-wide text-app-muted">
             Presets
           </span>
           <div className="flex flex-wrap items-center gap-1.5">
@@ -228,7 +228,7 @@ export default function ReverseCalculator() {
                     className={`cursor-pointer rounded-lg px-3 py-[7px] text-sm font-medium transition-all duration-200 ${toggleButtonClass(dpi === preset.ppi)}`}
                   >
                     {preset.label}{" "}
-                    <span className="font-mono text-zinc-500">{preset.ppi}</span>
+                    <span className="font-mono text-app-muted">{preset.ppi}</span>
                   </button>
                 ))
               : PPI_OPTIONS.map((val) => (
@@ -247,7 +247,7 @@ export default function ReverseCalculator() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-[11px] font-medium uppercase tracking-wide text-zinc-600">
+          <span className="text-[11px] font-medium uppercase tracking-wide text-app-muted">
             Customize
           </span>
           <div className="flex items-center">
@@ -267,7 +267,7 @@ export default function ReverseCalculator() {
         </div>
       </div>
 
-      <p className="mb-7 mt-[-4px] text-sm leading-relaxed text-zinc-500">
+      <p className="mb-7 mt-[-4px] text-sm leading-relaxed text-app-muted">
         Your file needs at least this many pixels to print{" "}
         <span
           title={
@@ -287,31 +287,31 @@ export default function ReverseCalculator() {
       {/* Result */}
       <div className="mb-6 flex flex-wrap gap-4">
         <div className="min-w-[220px] flex-[2] rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(56,189,248,0.18)]">
-          <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
+          <div className="mb-1 text-[11px] uppercase tracking-[1px] text-app-muted">
             Required pixels
           </div>
           <div className="font-mono text-2xl font-bold text-app-highlight sm:text-3xl">
             {hasResult ? `${formatPixels(w)} × ${formatPixels(h)}` : "—"}
             {hasResult && (
-              <span className="ml-1.5 text-sm font-normal text-zinc-600">
+              <span className="ml-1.5 text-sm font-normal text-app-muted">
                 px
               </span>
             )}
           </div>
         </div>
         <div className="min-w-[160px] flex-1 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
-          <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
+          <div className="mb-1 text-[11px] uppercase tracking-[1px] text-app-muted">
             Total resolution
           </div>
           <div className="font-mono text-2xl font-bold text-zinc-200">
             {hasResult ? megapixels.toFixed(1) : "—"}
             {hasResult && (
-              <span className="ml-1 text-sm font-normal text-zinc-600">MP</span>
+              <span className="ml-1 text-sm font-normal text-app-muted">MP</span>
             )}
           </div>
         </div>
         <div className="min-w-[160px] flex-1 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
-          <div className="mb-1 text-[11px] uppercase tracking-[1px] text-zinc-600">
+          <div className="mb-1 text-[11px] uppercase tracking-[1px] text-app-muted">
             Aspect ratio
           </div>
           <div className="font-mono text-2xl font-bold text-zinc-400">

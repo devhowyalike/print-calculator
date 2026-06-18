@@ -24,7 +24,7 @@ export default function PPIOrViewingSelector(props: PPIOrViewingSelectorProps) {
   if (props.mode === "print") {
     return (
       <div className="mb-4 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-x-4 sm:gap-y-2 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
-        <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+        <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-app-muted">
           Target PPI
         </span>
         <div className="flex items-center gap-1.5">
@@ -48,7 +48,7 @@ export default function PPIOrViewingSelector(props: PPIOrViewingSelectorProps) {
 
   return (
     <div className="mb-4 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-x-4 sm:gap-y-2 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
-      <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+      <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-app-muted">
         Target PPI
       </span>
       <div className="flex flex-wrap items-center gap-1.5">

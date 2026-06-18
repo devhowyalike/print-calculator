@@ -75,7 +75,7 @@ export default function CalculatorHeader({
         ))}
       </div>
 
-      <p className="mt-2 text-sm text-zinc-500 text-pretty">
+      <p className="mt-2 text-sm text-app-muted text-pretty">
         {MODE_DESCRIPTIONS[mode]}
       </p>
 

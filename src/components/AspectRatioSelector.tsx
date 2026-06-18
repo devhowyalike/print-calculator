@@ -113,13 +113,13 @@ export default function AspectRatioSelector(props: AspectRatioSelectorProps) {
     <div className="mb-7 rounded-2xl border border-white/6 bg-app-card-surface px-5 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
       <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger className="flex w-full items-center justify-between cursor-pointer">
-          <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+          <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-app-muted">
             Aspect Ratio
           </span>
           <div className="flex items-center gap-2">
             <span className="text-sm text-zinc-400">{currentLabel}</span>
             <ChevronDown
-              className={`h-4 w-4 text-zinc-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+              className={`h-4 w-4 text-app-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
             />
           </div>
         </CollapsibleTrigger>

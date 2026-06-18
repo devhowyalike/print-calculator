@@ -59,12 +59,12 @@ export default function DimensionInputs({
           : "inset 0 1px 0 0 rgba(255, 255, 255, 0.04)",
       }}
     >
-      <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-zinc-500">
+      <span className="whitespace-nowrap text-[13px] font-medium tracking-wide uppercase text-app-muted">
         Pixels
       </span>
       <div className="flex items-center gap-2">
         <div className="flex items-center">
-          <span className="flex items-center justify-center rounded-l-lg border border-r-0 border-white/8 bg-app-card px-2 py-[7px] text-sm font-medium text-zinc-500">W</span>
+          <span className="flex items-center justify-center rounded-l-lg border border-r-0 border-white/8 bg-app-card px-2 py-[7px] text-sm font-medium text-app-muted">W</span>
           <input
             type="number"
             value={pixelWStr}
@@ -76,14 +76,14 @@ export default function DimensionInputs({
         <button
           type="button"
           onClick={onSwap}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/8 bg-app-card text-zinc-500 transition-colors hover:border-white/15 hover:bg-app-hover hover:text-zinc-300"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/8 bg-app-card text-app-muted transition-colors hover:border-white/15 hover:bg-app-hover hover:text-zinc-300"
           title="Swap dimensions"
           aria-label="Swap width and height"
         >
           <ArrowLeftRight className="h-4 w-4" />
         </button>
         <div className="flex items-center">
-          <span className="flex items-center justify-center rounded-l-lg border border-r-0 border-white/8 bg-app-card px-2 py-[7px] text-sm font-medium text-zinc-500">H</span>
+          <span className="flex items-center justify-center rounded-l-lg border border-r-0 border-white/8 bg-app-card px-2 py-[7px] text-sm font-medium text-app-muted">H</span>
           <input
             type="number"
             value={pixelHStr}

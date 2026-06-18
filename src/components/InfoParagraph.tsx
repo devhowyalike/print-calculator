@@ -6,7 +6,7 @@ type InfoParagraphProps = {
 
 export default function InfoParagraph({ mode }: InfoParagraphProps) {
   return (
-    <p className="mb-7 mt-[-16px] text-sm leading-relaxed text-zinc-500">
+    <p className="mb-7 mt-[-16px] text-sm leading-relaxed text-app-muted">
       {mode === "print" ? (
         <>
           This calculator uses pixel dimensions only (PPI) — the DPI metadata
